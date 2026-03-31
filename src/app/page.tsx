@@ -12,10 +12,11 @@ export default function Home() {
     const updateMousePosition = (e: MouseEvent) => {
       if (heroRef.current) {
         const rect = heroRef.current.getBoundingClientRect()
-        setMousePosition({
+        const newPosition = {
           x: e.clientX - rect.left,
           y: e.clientY - rect.top,
-        })
+        }
+        setMousePosition(newPosition)
       }
     }
 
@@ -35,6 +36,7 @@ export default function Home() {
       <section 
         ref={heroRef}
         className="section-hero premium-gradient-light relative overflow-hidden"
+        style={{ minHeight: '80vh' }}
       >
         <div className="container-narrow relative z-10">
           <div className="text-center max-w-4xl mx-auto animate-premium-fade-in">
@@ -59,13 +61,23 @@ export default function Home() {
         
         {/* Premium Background Elements with Cursor Following */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {/* Cursor-following green circle */}
+          {/* Cursor-following green circle - More visible and responsive */}
           <div 
-            className="absolute w-96 h-96 bg-lettuce-green opacity-5 rounded-full blur-3xl transition-transform duration-300 ease-out"
+            className="absolute w-96 h-96 bg-lettuce-green opacity-15 rounded-full blur-3xl transition-transform duration-200 ease-out"
             style={{
-              transform: `translate3d(${mousePosition.x * 0.1 - 192}px, ${mousePosition.y * 0.1 - 192}px, 0)`,
-              left: '25%',
-              top: '25%',
+              transform: `translate3d(${mousePosition.x * 0.3 - 192}px, ${mousePosition.y * 0.3 - 192}px, 0)`,
+              left: '20%',
+              top: '20%',
+            }}
+          />
+          
+          {/* Second following circle for depth */}
+          <div 
+            className="absolute w-64 h-64 bg-lettuce-green opacity-8 rounded-full blur-2xl transition-transform duration-300 ease-out"
+            style={{
+              transform: `translate3d(${mousePosition.x * 0.15 - 128}px, ${mousePosition.y * 0.15 - 128}px, 0)`,
+              left: '60%',
+              top: '40%',
             }}
           />
           
