@@ -169,6 +169,54 @@ export const productCatalog: Product[] = [
     createdAt: new Date('2024-01-01'),
     updatedAt: new Date('2024-01-01'),
   },
+
+  {
+    id: 'die-cut-stickers',
+    name: 'Die-Cut Stickers',
+    description: 'Precision-cut custom stickers in any shape with professional-grade materials and AI design tools',
+    category: 'Labels & Stickers',
+    basePrice: 30.00,
+    images: ['/images/products/die-cut-stickers-1.jpg', '/images/products/die-cut-stickers-2.jpg'],
+    specifications: {
+      sizes: [
+        { id: '1x1', name: '1" x 1"', dimensions: '1" x 1"', priceMultiplier: 0.8 },
+        { id: '2x2', name: '2" x 2"', dimensions: '2" x 2"', priceMultiplier: 1.0 },
+        { id: '3x3', name: '3" x 3"', dimensions: '3" x 3"', priceMultiplier: 1.8 },
+        { id: '4x4', name: '4" x 4"', dimensions: '4" x 4"', priceMultiplier: 2.5 },
+        { id: 'custom', name: 'Custom Size', dimensions: 'Variable', priceMultiplier: 1.0 },
+      ],
+      paperTypes: [
+        { id: 'vinyl', name: 'Premium Vinyl', description: 'Waterproof, 5+ year outdoor life', priceMultiplier: 1.0 },
+        { id: 'paper', name: 'Paper Stock', description: 'Cost-effective for indoor use', priceMultiplier: 0.8 },
+        { id: 'clear', name: 'Clear Vinyl', description: 'Transparent with printed colors only', priceMultiplier: 1.15 },
+        { id: 'holographic', name: 'Holographic', description: 'Prismatic rainbow effect', priceMultiplier: 1.4 },
+        { id: 'kraft', name: 'Kraft Paper', description: 'Natural brown paper aesthetic', priceMultiplier: 0.9 },
+      ],
+      finishes: [
+        { id: 'matte', name: 'Matte Finish', description: 'No glare, professional look', priceMultiplier: 1.0 },
+        { id: 'gloss', name: 'Gloss Finish', description: 'High shine, vibrant colors', priceMultiplier: 1.1 },
+        { id: 'satin', name: 'Satin Finish', description: 'Subtle shine, smooth feel', priceMultiplier: 1.05 },
+      ],
+      turnaroundTimes: [
+        { id: 'standard', name: 'Standard (2-3 days)', days: 3, priceMultiplier: 1.0 },
+        { id: 'expedited', name: 'Expedited (1-2 days)', days: 2, priceMultiplier: 1.3 },
+        { id: 'rush', name: 'Same Day', days: 1, priceMultiplier: 2.0 },
+      ],
+    },
+    quantityPricing: [
+      { min: 25, max: 49, priceMultiplier: 1.2 },
+      { min: 50, max: 99, priceMultiplier: 1.0 },
+      { min: 100, max: 249, priceMultiplier: 0.8 },
+      { min: 250, max: 499, priceMultiplier: 0.6 },
+      { min: 500, max: 999, priceMultiplier: 0.4 },
+      { min: 1000, max: 2499, priceMultiplier: 0.3 },
+      { min: 2500, max: 4999, priceMultiplier: 0.25 },
+      { min: 5000, max: 10000, priceMultiplier: 0.2 },
+    ],
+    status: 'active',
+    createdAt: new Date('2024-01-01'),
+    updatedAt: new Date('2024-01-01'),
+  },
 ];
 
 // Product categories for filtering and navigation

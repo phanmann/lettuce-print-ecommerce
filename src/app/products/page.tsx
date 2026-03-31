@@ -39,7 +39,9 @@ export default function ProductsPage() {
                 <div className="flex justify-between items-center">
                   <span className="text-lg font-bold text-lettuce-green">Starting at ${product.basePrice.toFixed(2)}</span>
                   <Link 
-                    href={product.id === 'roll-labels' ? '/products/roll-labels' : `/products/${product.id}`}
+                    href={product.id === 'roll-labels' ? '/products/roll-labels' : 
+                          product.id === 'die-cut-stickers' ? '/products/die-cut-stickers' : 
+                          `/products/${product.id}`}
                     className="btn-primary px-4 py-2 text-sm"
                   >
                     Configure & Price
