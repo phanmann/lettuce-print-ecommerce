@@ -5,11 +5,12 @@ import Image from 'next/image'
 import { useCartStore } from '@/stores/cartStore'
 import { EnhancedPricingCalculator } from '@/utils/enhancedPricingCalculator'
 import { Star, ShoppingCart, Check, Calculator, Info, Upload, Package, Clock, Circle, Square, Shapes } from 'lucide-react'
+import LabelPreview from '@/components/LabelPreview'
 
 export default function RollLabelsProductPage() {
-  const [selectedShape, setSelectedShape] = useState('circle')
-  const [selectedStock, setSelectedStock] = useState('standard')
-  const [selectedFinish, setSelectedFinish] = useState('matte')
+  const [selectedShape, setSelectedShape] = useState<'circle' | 'square' | 'custom'>('circle')
+  const [selectedStock, setSelectedStock] = useState<'standard' | 'bopp'>('standard')
+  const [selectedFinish, setSelectedFinish] = useState<'matte' | 'gloss'>('matte')
   const [labelSize, setLabelSize] = useState({ width: '2', length: '2' })
   const [quantity, setQuantity] = useState(100)
   const [calculatedPrice, setCalculatedPrice] = useState<any>(null)
@@ -18,6 +19,7 @@ export default function RollLabelsProductPage() {
   const [addedToCart, setAddedToCart] = useState(false)
   const [showPriceBreakdown, setShowPriceBreakdown] = useState(false)
   const [quantitySuggestions, setQuantitySuggestions] = useState<any[]>([])
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
 
   const addToCart = useCartStore((state) => state.addToCart)
 
@@ -122,6 +124,7 @@ export default function RollLabelsProductPage() {
         productId: rollLabelsData.id,
         productType: 'roll-labels',
         quantity,
+        size: `${labelSize.width}x${labelSize.length}`,
         width: labelSize.width,
         length: labelSize.length,
         shape: selectedShape,
@@ -177,6 +180,7 @@ export default function RollLabelsProductPage() {
         quantity,
         unitPrice: calculatedPrice?.unitPrice || 0,
         specifications: {
+          size: `${labelSize.width}x${labelSize.length}`,
           shape: selectedShape,
           width: labelSize.width,
           length: labelSize.length,
@@ -185,7 +189,7 @@ export default function RollLabelsProductPage() {
           turnaroundTime: 'standard',
         },
         customizations: {
-          uploadedFiles: [],
+          uploadedFiles: uploadedFiles.map(file => file.name),
           specialInstructions: `Size: ${labelSize.width}" W x ${labelSize.length}" L`,
         },
         addedAt: new Date(),
@@ -259,15 +263,18 @@ export default function RollLabelsProductPage() {
               </button>
             </div>
 
-            {/* Product Image */}
-            <div className="bg-gray-100 rounded-2xl overflow-hidden shadow-lg">
-              <div className="aspect-square bg-gradient-to-br from-lettuce-pale to-white flex items-center justify-center">
-                <div className="text-center animate-scale-in">
-                  <Package className="h-32 w-32 text-lettuce-green mx-auto mb-6" />
-                  <p className="text-gray-600 text-xl font-medium mb-2">{selectedShapeData?.name} Labels Preview</p>
-                  <p className="text-gray-500 text-sm">{selectedStockData?.name} - {selectedFinishData?.name}</p>
-                </div>
-              </div>
+            {/* Interactive Label Preview */}
+            <div className="bg-white rounded-2xl overflow-hidden shadow-lg p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Label Preview</h3>
+              <LabelPreview
+                shape={selectedShape}
+                width={labelSize.width}
+                length={labelSize.length}
+                stock={selectedStock}
+                finish={selectedFinish}
+                onFileUpload={(files) => setUploadedFiles(prev => [...prev, ...files])}
+                className="w-full"
+              />
             </div>
 
             {/* Key Features */}
@@ -323,7 +330,7 @@ export default function RollLabelsProductPage() {
                         name="shape"
                         value={shape.id}
                         checked={selectedShape === shape.id}
-                        onChange={() => setSelectedShape(shape.id)}
+                        onChange={() => setSelectedShape(shape.id as 'circle' | 'square' | 'custom')}
                         className="text-lettuce-green focus:ring-lettuce-green"
                       />
                       <div className="ml-3 flex-1 flex items-center space-x-3">
@@ -399,7 +406,7 @@ export default function RollLabelsProductPage() {
                       name="stock"
                       value={stock.id}
                       checked={selectedStock === stock.id}
-                      onChange={() => setSelectedStock(stock.id)}
+                      onChange={() => setSelectedStock(stock.id as 'standard' | 'bopp')}
                       className="text-lettuce-green focus:ring-lettuce-green mt-1"
                     />
                     <div className="ml-3 flex-1">
@@ -427,7 +434,7 @@ export default function RollLabelsProductPage() {
                       name="finish"
                       value={finish.id}
                       checked={selectedFinish === finish.id}
-                      onChange={() => setSelectedFinish(finish.id)}
+                      onChange={() => setSelectedFinish(finish.id as 'matte' | 'gloss')}
                       className="text-lettuce-green focus:ring-lettuce-green mt-1"
                     />
                     <div className="ml-3 flex-1">
