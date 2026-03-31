@@ -1,237 +1,345 @@
-import Image from 'next/image'
-import Link from 'next/link'
+'use client';
 
-export default function Home() {
+import Link from 'next/link';
+import Image from 'next/image';
+import { useState, useEffect } from 'react';
+
+export default function HomePage() {
   return (
-    <div className="min-h-screen">
-      {/* Premium Hero Section */}
-      <section className="section-hero premium-gradient-light relative overflow-hidden">
-        <div className="container-narrow relative z-10">
-          <div className="text-center max-w-4xl mx-auto animate-premium-fade-in">
-            <h1 className="text-editorial-hero text-neutral-900 mb-8">
-              Brooklyn's
-              <span className="block text-lettuce-green">Creative Partner</span>
-              for Premium Print
-            </h1>
-            <p className="text-premium-lead mb-12 max-w-2xl mx-auto">
-              We transform your vision into tangible excellence. From business cards that command attention to marketing materials that tell your story with sophistication.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <Link href="/quote" className="btn-premium-primary text-lg px-12 py-5">
-                Start Your Project
-              </Link>
-              <Link href="/services" className="text-lettuce-green font-medium text-lg hover:text-lettuce-dark transition-colors">
-                Explore Our Work →
-              </Link>
+    <div className="min-h-screen bg-surface text-on-surface">
+      {/* Navigation Header */}
+      <header className="fixed top-0 w-full z-50 bg-white flex justify-between items-center px-6 h-20">
+        <div className="flex items-center gap-8">
+          <span className="text-2xl font-black tracking-tighter text-zinc-900 font-headline">
+            LETTUCE PRINT
+          </span>
+          <nav className="hidden md:flex gap-6">
+            <Link href="/" className="font-headline font-bold uppercase tracking-tighter text-primary border-b-4 border-primary-container py-1">
+              PRINT
+            </Link>
+            <Link href="/configurator" className="font-headline font-bold uppercase tracking-tighter text-zinc-500 hover:bg-zinc-50 px-2 py-1 transition-colors">
+              DESIGN
+            </Link>
+            <Link href="/products" className="font-headline font-bold uppercase tracking-tighter text-zinc-500 hover:bg-zinc-50 px-2 py-1 transition-colors">
+              SHOP
+            </Link>
+            <Link href="/about" className="font-headline font-bold uppercase tracking-tighter text-zinc-500 hover:bg-zinc-50 px-2 py-1 transition-colors">
+              ABOUT
+            </Link>
+          </nav>
+        </div>
+        <div className="flex items-center gap-4">
+          <Link 
+            href="/configurator" 
+            className="bg-primary-container text-on-primary-container font-headline font-bold uppercase tracking-tighter px-6 py-2 hover:scale-95 transition-transform duration-75"
+          >
+            START PROJECT
+          </Link>
+          <div className="w-10 h-10 bg-surface-container overflow-hidden">
+            <div className="w-full h-full bg-gradient-to-br from-primary-container to-primary flex items-center justify-center">
+              <span className="text-on-primary-container font-headline font-black text-sm">LP</span>
             </div>
           </div>
         </div>
-        
-        {/* Premium Background Elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-lettuce-green opacity-5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-lettuce-green opacity-3 rounded-full blur-3xl"></div>
-        </div>
-      </section>
+      </header>
 
-      {/* Premium Services Section */}
-      <section className="section-premium bg-premium-white">
-        <div className="container-custom">
-          <div className="text-center max-w-3xl mx-auto mb-20">
-            <h2 className="text-editorial-large text-neutral-900 mb-6">
-              Crafted with
-              <span className="text-lettuce-green"> Precision</span>
-            </h2>
-            <p className="text-premium-body">
-              Every piece we create is a testament to our commitment to excellence. From the first design consultation to the final delivery, we ensure your brand is represented with the sophistication it deserves.
-            </p>
+      <main className="pt-20">
+        {/* Hero Section: The Industrial Editor */}
+        <section className="relative bg-surface-container-lowest min-h-[870px] flex items-center overflow-hidden">
+          <div className="absolute inset-0 z-0">
+            <div className="w-full h-full bg-gradient-to-br from-surface-container-low via-surface to-primary-container/5 opacity-60"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-transparent to-primary-container/10"></div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                title: 'Business Cards',
-                description: 'Impressions that last beyond the handshake. Premium papers, refined finishes, and meticulous attention to detail.',
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.657 0 3 4.03 3 6s-1.343 6-3 6-3-4.03-3-6 1.343-6 3-6z" />
-                  </svg>
-                ),
-                cta: 'Design Yours'
-              },
-              {
-                title: 'Marketing Materials',
-                description: 'Brochures and flyers that command attention. Strategic design meets premium execution.',
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                ),
-                cta: 'Explore Options'
-              },
-              {
-                title: 'Large Format',
-                description: 'Banners and signage that make statements. From intimate gatherings to grand events.',
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                ),
-                cta: 'View Gallery'
-              },
-              {
-                title: 'Stationery Systems',
-                description: 'Cohesive brand identity across every touchpoint. Letterheads, envelopes, and notecards.',
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                ),
-                cta: 'Design System'
-              },
-              {
-                title: 'Packaging',
-                description: 'Packaging that elevates the unboxing experience. Every detail considered and crafted.',
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                  </svg>
-                ),
-                cta: 'Explore Packaging'
-              },
-              {
-                title: 'Specialty Finishes',
-                description: 'Embossing, foil stamping, and specialty coatings that add tactile luxury.',
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                  </svg>
-                ),
-                cta: 'Discover Finishes'
-              }
-            ].map((service, index) => (
-              <div key={index} className="card-premium p-8 group hover:-translate-y-2 transition-all duration-300">
-                <div className="flex items-center mb-6">
-                  <div className="p-3 bg-lettuce-pale rounded-full mr-4 group-hover:bg-lettuce-green transition-colors duration-300">
-                    <div className="text-lettuce-green group-hover:text-white transition-colors duration-300">
-                      {service.icon}
+          <div className="container mx-auto px-6 relative z-10 grid grid-cols-12 gap-6">
+            <div className="col-span-12 lg:col-span-10">
+              <div className="inline-block bg-on-surface text-surface font-headline font-bold text-sm tracking-widest px-4 py-1 mb-8">
+                EST. BROOKLYN NY
+              </div>
+              <h1 className="font-headline text-[clamp(4rem,12vw,9rem)] leading-[0.85] font-black uppercase tracking-tighter mb-8">
+                INKED IN<br/>
+                <span className="text-primary-container bg-on-surface px-2">PRESSURE</span>
+              </h1>
+              <div className="flex flex-wrap items-end gap-8">
+                <Link 
+                  href="/configurator" 
+                  className="bg-primary-container text-on-primary-container font-headline font-black text-2xl uppercase px-10 py-6 hover:bg-primary hover:text-primary-container transition-all hover:scale-95 block"
+                >
+                  ORDER REELS
+                </Link>
+                <div className="max-w-xs mb-2">
+                  <p className="font-body text-lg font-medium leading-tight text-on-surface-variant">
+                    Premium production for the independent era. We turn digital concepts into physical weight.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Brooklyn Badge */}
+          <BrooklynBadge />
+        </section>
+
+        {/* Product Categories: Bento Grid */}
+        <section className="py-24 bg-surface px-6">
+          <div className="container mx-auto">
+            <div className="flex justify-between items-end mb-16">
+              <h2 className="font-headline text-6xl font-black uppercase tracking-tighter">THE CATALOG</h2>
+              <Link href="/products" className="font-headline text-primary font-bold text-xl uppercase underline underline-offset-8">
+                VIEW ALL SPECS
+              </Link>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+              {/* Roll Labels */}
+              <div className="md:col-span-8 group relative bg-surface-container-lowest overflow-hidden h-[500px] cursor-pointer">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary-container/20 to-primary/10 group-hover:from-primary-container/30 group-hover:to-primary/20 transition-all duration-700"></div>
+                <div className="absolute bottom-0 left-0 p-10 z-10">
+                  <h3 className="font-headline text-5xl font-black text-white bg-on-surface px-4 py-2 inline-block mb-4">
+                    ROLL LABELS
+                  </h3>
+                  <p className="font-body text-surface bg-on-surface/80 p-4 max-w-sm">
+                    High-speed production reels for automated packaging. Solvent-resistant finishes available.
+                  </p>
+                  <Link 
+                    href="/configurator" 
+                    className="mt-4 inline-block font-headline font-bold uppercase text-sm bg-primary-container text-on-primary-container px-4 py-2 hover:scale-95 transition-transform"
+                  >
+                    CONFIGURE →
+                  </Link>
+                </div>
+              </div>
+
+              {/* Streetwear Stickers */}
+              <div className="md:col-span-4 group relative bg-surface-container-high overflow-hidden h-[500px] cursor-pointer">
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-on-surface/60 group-hover:to-on-surface/80 transition-all"></div>
+                <div className="absolute inset-0 flex flex-col justify-between p-10 z-10">
+                  <div className="text-right">
+                    <span className="bg-primary-container text-on-primary-container font-headline font-black px-3 py-1">
+                      VINYL HEAVYWEIGHT
+                    </span>
+                  </div>
+                  <div>
+                    <h3 className="font-headline text-4xl font-black text-on-surface leading-none uppercase mb-4">
+                      STREETWEAR<br/>STICKERS
+                    </h3>
+                    <Link 
+                      href="/products/stickers" 
+                      className="font-headline font-bold uppercase text-sm border-b-2 border-on-surface hover:bg-on-surface hover:text-surface px-2 py-1 transition-colors"
+                    >
+                      BROWSE →
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              {/* Cannabis Packaging */}
+              <div className="md:col-span-4 group relative bg-on-surface overflow-hidden h-[400px] cursor-pointer">
+                <div className="absolute inset-0 bg-gradient-to-t from-on-surface/80 to-transparent"></div>
+                <div className="absolute inset-0 flex items-center justify-center p-10 z-10">
+                  <div className="text-center">
+                    <h3 className="font-headline text-3xl font-black text-primary-container uppercase tracking-tighter mb-4">
+                      CANNABIS<br/>PACKAGING
+                    </h3>
+                    <Link 
+                      href="/products/packaging" 
+                      className="font-headline font-bold uppercase text-sm text-primary-container border border-primary-container px-4 py-2 hover:bg-primary-container hover:text-on-primary-container transition-colors"
+                    >
+                      VIEW SAMPLES
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              {/* Custom Boxes */}
+              <div className="md:col-span-8 group relative bg-surface-container-low overflow-hidden h-[400px] cursor-pointer">
+                <div className="absolute inset-0 flex p-10 items-start justify-between">
+                  <div className="z-10">
+                    <h3 className="font-headline text-4xl font-black text-on-surface uppercase mb-4">
+                      CUSTOM MAILERS
+                    </h3>
+                    <p className="font-body max-w-xs text-on-surface-variant font-medium mb-6">
+                      Eco-friendly recycled cardstock with high-definition digital printing for premium unboxing.
+                    </p>
+                    <Link 
+                      href="/products/boxes" 
+                      className="border-b-2 border-on-surface font-headline font-bold uppercase hover:bg-on-surface hover:text-surface px-2 py-1 transition-colors"
+                    >
+                      Configure Box →
+                    </Link>
+                  </div>
+                  <div className="w-1/2 h-full bg-gradient-to-l from-primary-container/20 to-transparent flex items-end justify-center pb-8">
+                    <div className="w-32 h-48 bg-surface-container border-4 border-on-surface flex items-center justify-center">
+                      <span className="font-headline font-black text-on-surface text-2xl -rotate-12">
+                        SAMPLE
+                      </span>
                     </div>
                   </div>
-                  <h3 className="text-xl font-semibold text-neutral-900">{service.title}</h3>
                 </div>
-                <p className="text-premium-body mb-6">{service.description}</p>
-                <Link href="/quote" className="text-lettuce-green font-medium hover:text-lettuce-dark transition-colors group-hover:translate-x-1 transform duration-300">
-                  {service.cta} →
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Premium Portfolio Showcase */}
-      <section className="section-premium bg-neutral-50">
-        <div className="container-custom">
-          <div className="grid lg:grid-cols-2 gap-24 items-center">
-            <div>
-              <h2 className="text-editorial-large text-neutral-900 mb-8">
-                Where Vision
-                <span className="block text-lettuce-green">Meets Craft</span>
-              </h2>
-              <p className="text-premium-body mb-8">
-                Our portfolio represents collaborations with Brooklyn's most discerning brands. Each project demonstrates our commitment to transforming concepts into tangible excellence.
-              </p>
-              <p className="text-premium-body mb-12">
-                From startups making their first impression to established businesses refreshing their identity, we bring the same level of meticulous attention to every detail.
-              </p>
-              <Link href="/portfolio" className="btn-premium-outline px-10 py-4">
-                View Our Portfolio
-              </Link>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="space-y-6">
-                <div className="aspect-square bg-lettuce-green rounded-2xl opacity-20"></div>
-                <div className="aspect-square bg-neutral-200 rounded-2xl"></div>
-              </div>
-              <div className="space-y-6 pt-12">
-                <div className="aspect-square bg-neutral-300 rounded-2xl"></div>
-                <div className="aspect-square bg-lettuce-pale rounded-2xl"></div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Premium Process Section */}
-      <section className="section-premium bg-premium-white">
-        <div className="container-narrow">
-          <div className="text-center max-w-3xl mx-auto mb-20">
-            <h2 className="text-editorial-large text-neutral-900 mb-6">
-              A Process
-              <span className="text-lettuce-green"> Rooted in Excellence</span>
+        {/* Stats Section */}
+        <section className="bg-on-surface text-surface py-24 px-6 overflow-hidden relative">
+          <div className="absolute top-0 right-0 font-headline font-black text-[20rem] text-surface-container/5 leading-none translate-x-1/4 -translate-y-1/4 select-none">
+            BK
+          </div>
+          <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 relative z-10">
+            <div className="flex flex-col gap-2">
+              <span className="text-primary-container font-headline text-7xl font-black">1.2M+</span>
+              <span className="font-headline font-bold text-xl uppercase tracking-tighter">IMPRESSIONS / MO</span>
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="text-primary-container font-headline text-7xl font-black">24H</span>
+              <span className="font-headline font-bold text-xl uppercase tracking-tighter">PROTOTYPING</span>
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="text-primary-container font-headline text-7xl font-black">100%</span>
+              <span className="font-headline font-bold text-xl uppercase tracking-tighter">SOLVENT FREE</span>
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="text-primary-container font-headline text-7xl font-black">01</span>
+              <span className="font-headline font-bold text-xl uppercase tracking-tighter">PRINTER TO RULE</span>
+            </div>
+          </div>
+        </section>
+
+        {/* Factory Standard Section */}
+        <FactoryStandardSection />
+
+        {/* CTA Section */}
+        <section className="py-40 bg-primary-container text-on-primary-container text-center px-6">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="font-headline text-8xl font-black uppercase tracking-tighter mb-12 leading-[0.8]">
+              WANT TO PRINT<br/>SOMETHING BOLD?
             </h2>
-            <p className="text-premium-body">
-              Our approach combines traditional craftsmanship with modern efficiency. Every project follows a refined process designed to deliver exceptional results.
+            <Link 
+              href="/configurator" 
+              className="bg-on-primary-container text-primary-container font-headline font-black text-3xl px-16 py-8 uppercase hover:scale-105 transition-transform inline-block"
+            >
+              GET A QUOTE NOW
+            </Link>
+          </div>
+        </section>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-zinc-900 w-full py-12 px-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+          <div className="flex flex-col gap-6">
+            <span className="text-lg font-black text-white font-headline">LETTUCE PRINT</span>
+            <p className="font-headline font-bold uppercase text-xs tracking-widest text-primary-container">
+              ©2024 LETTUCE PRINT BROOKLYN. ALL RIGHTS RESERVED.
             </p>
           </div>
-          
-          <div className="grid md:grid-cols-3 gap-12">
-            {[
-              {
-                step: '01',
-                title: 'Consultation',
-                description: 'We begin by understanding your vision, brand identity, and objectives. This foundation ensures every decision aligns with your goals.'
-              },
-              {
-                step: '02',
-                title: 'Design & Proof',
-                description: 'Our team creates refined designs with meticulous attention to typography, spacing, and visual hierarchy. You receive detailed proofs for approval.'
-              },
-              {
-                step: '03',
-                title: 'Production & Delivery',
-                description: 'Using premium materials and state-of-the-art equipment, we bring your vision to life with precision timing and careful delivery.'
-              }
-            ].map((step, index) => (
-              <div key={index} className="text-center group">
-                <div className="inline-flex items-center justify-center w-20 h-20 bg-lettuce-pale rounded-full mb-8 group-hover:bg-lettuce-green transition-colors duration-300">
-                  <span className="text-2xl font-semibold text-lettuce-green group-hover:text-white transition-colors duration-300">{step.step}</span>
-                </div>
-                <h3 className="text-2xl font-semibold text-neutral-900 mb-4">{step.title}</h3>
-                <p className="text-premium-body">{step.description}</p>
-              </div>
-            ))}
+          <div className="flex flex-col gap-4">
+            <span className="text-white font-headline font-black uppercase tracking-tight">SERVICES</span>
+            <nav className="flex flex-col gap-2 font-headline font-bold uppercase text-xs tracking-widest">
+              <Link href="/configurator" className="text-zinc-400 hover:text-white transition-colors">ROLL LABELS</Link>
+              <Link href="/products/stickers" className="text-zinc-400 hover:text-white transition-colors">STICKERS</Link>
+              <Link href="/products/packaging" className="text-zinc-400 hover:text-white transition-colors">PACKAGING</Link>
+            </nav>
+          </div>
+          <div className="flex flex-col gap-4">
+            <span className="text-white font-headline font-black uppercase tracking-tight">COMPANY</span>
+            <nav className="flex flex-col gap-2 font-headline font-bold uppercase text-xs tracking-widest">
+              <Link href="/terms" className="text-zinc-400 hover:text-white transition-colors">TERMS</Link>
+              <Link href="/privacy" className="text-zinc-400 hover:text-white transition-colors">PRIVACY</Link>
+              <Link href="/careers" className="text-zinc-400 hover:text-white transition-colors">CAREERS</Link>
+            </nav>
+          </div>
+          <div className="flex flex-col gap-4">
+            <span className="text-white font-headline font-black uppercase tracking-tight">SOCIAL</span>
+            <nav className="flex flex-col gap-2 font-headline font-bold uppercase text-xs tracking-widest">
+              <a href="#" className="text-zinc-400 hover:text-white transition-colors">INSTAGRAM</a>
+              <a href="#" className="text-zinc-400 hover:text-white transition-colors">VIMEO</a>
+            </nav>
           </div>
         </div>
-      </section>
-
-      {/* Premium CTA Section */}
-      <section className="section-hero premium-gradient relative overflow-hidden">
-        <div className="container-narrow text-center relative z-10">
-          <div className="max-w-3xl mx-auto animate-premium-fade-in">
-            <h2 className="text-editorial-large text-white mb-8">
-              Ready to Elevate Your Brand?
-            </h2>
-            <p className="text-xl text-white/90 mb-12 max-w-2xl mx-auto">
-              Let's discuss how we can transform your printing needs into premium brand experiences that resonate with your audience.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <Link href="/quote" className="btn-premium-primary bg-white text-lettuce-green hover:bg-neutral-50 px-12 py-5 text-lg">
-                Start Your Project
-              </Link>
-              <Link href="/contact" className="text-white font-medium text-lg hover:text-neutral-200 transition-colors">
-                Schedule a Call →
-              </Link>
-            </div>
-          </div>
-        </div>
-        
-        {/* Premium Background Elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-white opacity-10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-1/3 left-1/4 w-80 h-80 bg-white opacity-5 rounded-full blur-3xl"></div>
-        </div>
-      </section>
+      </footer>
     </div>
-  )
+  );
+}
+
+// Brooklyn Badge Component
+function BrooklynBadge() {
+  return (
+    <div className="absolute bottom-12 right-12 hidden md:block">
+      <div className="w-40 h-40 border-4 border-on-surface rounded-full flex items-center justify-center p-2 relative">
+        <div className="absolute inset-0 flex items-center justify-center animate-spin-slow">
+          <svg className="w-full h-full overflow-visible" viewBox="0 0 100 100">
+            <defs>
+              <path
+                id="circlePath"
+                d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"
+                fill="none"
+              />
+            </defs>
+            <text className="font-headline font-black uppercase text-[10px] tracking-[0.2em] fill-on-surface">
+              <textPath href="#circlePath">
+                MADE IN NEW YORK CITY • 100% BKLYN • QUALITY FIRST • 
+              </textPath>
+            </text>
+          </svg>
+        </div>
+        <span className="font-headline font-black text-2xl">BKLYN</span>
+      </div>
+    </div>
+  );
+}
+
+// Factory Standard Section Component
+function FactoryStandardSection() {
+  return (
+    <section className="bg-white py-32 px-6">
+      <div className="container mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div>
+            <h2 className="font-headline text-7xl font-black uppercase tracking-tighter leading-none mb-12">
+              FACTORY<br/>
+              <span className="text-primary">STANDARD</span>
+            </h2>
+            <div className="space-y-12">
+              <div className="group">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="font-headline font-black text-4xl">01</span>
+                  <span className="text-primary text-4xl">🖨</span>
+                </div>
+                <h4 className="font-headline font-bold text-2xl uppercase mb-2">PIGMENT DEPTH</h4>
+                <p className="font-body text-on-surface-variant">
+                  Using 7-color process ink for gamut expansion and deep, archival blacks.
+                </p>
+              </div>
+              <div className="group">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="font-headline font-black text-4xl">02</span>
+                  <span className="text-primary text-4xl">⚙️</span>
+                </div>
+                <h4 className="font-headline font-bold text-2xl uppercase mb-2">LASER PRECISION</h4>
+                <p className="font-body text-on-surface-variant">
+                  Digital die-cutting ensures zero drift and sharp edges on every sticker unit.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-surface-container-high aspect-square p-8 overflow-hidden relative">
+            <div className="w-full h-full bg-gradient-to-br from-primary-container/30 to-primary/20 flex items-center justify-center">
+              <div className="text-center">
+                <div className="w-32 h-32 bg-primary-container border-4 border-on-surface mb-4 flex items-center justify-center mx-auto">
+                  <span className="font-headline font-black text-on-primary-container text-xl">
+                    INK TEST
+                  </span>
+                </div>
+                <span className="font-headline font-black text-primary text-sm uppercase">
+                  SAMPLES AVAILABLE
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }
