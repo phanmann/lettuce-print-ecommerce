@@ -214,10 +214,10 @@ export const calculateEnhancedPrice = (
 
   // Calculate base pricing using existing calculator logic
   const calculatorProductType = getCalculatorProductType(productId);
-  const baseUnitPrice = EXISTING_CALCULATOR_PRICING.base[calculatorProductType] || 0.15;
-  const paperUnitPrice = EXISTING_CALCULATOR_PRICING.paper[paperType] || 0;
-  const finishUnitPrice = EXISTING_CALCULATOR_PRICING.finish[finish] || 0;
-  const turnaroundMultiplier = EXISTING_CALCULATOR_PRICING.turnaround[turnaroundTime] || 0;
+  const baseUnitPrice = EXISTING_CALCULATOR_PRICING.base[calculatorProductType as keyof typeof EXISTING_CALCULATOR_PRICING.base] || 0.15;
+  const paperUnitPrice = EXISTING_CALCULATOR_PRICING.paper[paperType as keyof typeof EXISTING_CALCULATOR_PRICING.paper] || 0;
+  const finishUnitPrice = EXISTING_CALCULATOR_PRICING.finish[finish as keyof typeof EXISTING_CALCULATOR_PRICING.finish] || 0;
+  const turnaroundMultiplier = EXISTING_CALCULATOR_PRICING.turnaround[turnaroundTime as keyof typeof EXISTING_CALCULATOR_PRICING.turnaround] || 0;
 
   // Calculate individual components
   let baseSubtotal = baseUnitPrice * quantity;
@@ -314,7 +314,7 @@ const calculateShippingCost = (quantity: number, zipCode: string): number => {
   const tiers = Object.keys(shippingCosts).map(Number).sort((a, b) => a - b);
   const applicableTier = tiers.reverse().find(tier => quantity >= tier) || tiers[tiers.length - 1];
   
-  return shippingCosts[applicableTier];
+  return shippingCosts[applicableTier as keyof typeof shippingCosts];
 };
 
 // Get tax rate based on location
@@ -335,7 +335,7 @@ const calculateDeliveryInfo = (turnaroundTime: string, quantity: number): {
   productionTime: number;
   shippingTime: number;
 } => {
-  const productionTime = PRODUCTION_TIMES[turnaroundTime] || 5;
+  const productionTime = PRODUCTION_TIMES[turnaroundTime as keyof typeof PRODUCTION_TIMES] || 5;
   const shippingTime = quantity > 1000 ? 3 : 2; // Larger orders take longer to ship
   const totalDays = productionTime + shippingTime;
   

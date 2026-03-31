@@ -132,7 +132,8 @@ export default function RollLabelsProductPage() {
           turnaroundTime: 'standard',
         },
         customizations: {
-          customSize: showCustomSize ? customSize : null,
+          uploadedFiles: [],
+          specialInstructions: showCustomSize ? `Custom Size: ${customSize.width}"W x ${customSize.height}"H` : '',
         },
         addedAt: new Date(),
       }
