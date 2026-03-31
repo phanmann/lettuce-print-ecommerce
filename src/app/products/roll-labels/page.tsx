@@ -7,10 +7,10 @@ import { EnhancedPricingCalculator } from '@/utils/enhancedPricingCalculator'
 import { Star, ShoppingCart, Check, Calculator, Info, Upload, Package, Clock, Circle, Square, Shapes } from 'lucide-react'
 
 export default function RollLabelsProductPage() {
-  const [selectedSize, setSelectedSize] = useState('1x1')
   const [selectedShape, setSelectedShape] = useState('circle')
   const [selectedStock, setSelectedStock] = useState('standard')
   const [selectedFinish, setSelectedFinish] = useState('matte')
+  const [labelSize, setLabelSize] = useState({ width: '2', length: '2' })
   const [quantity, setQuantity] = useState(100)
   const [calculatedPrice, setCalculatedPrice] = useState<any>(null)
   const [priceLoading, setPriceLoading] = useState(false)
@@ -18,8 +18,6 @@ export default function RollLabelsProductPage() {
   const [addedToCart, setAddedToCart] = useState(false)
   const [showPriceBreakdown, setShowPriceBreakdown] = useState(false)
   const [quantitySuggestions, setQuantitySuggestions] = useState<any[]>([])
-  const [customSize, setCustomSize] = useState({ width: '', height: '' })
-  const [showCustomSize, setShowCustomSize] = useState(false)
 
   const addToCart = useCartStore((state) => state.addToCart)
 
@@ -57,15 +55,7 @@ export default function RollLabelsProductPage() {
           icon: Shapes 
         },
       ],
-      sizes: [
-        { id: '1x1', name: '1" x 1"', dimensions: '1" x 1"', priceMultiplier: 1.0 },
-        { id: '1.5x1.5', name: '1.5" x 1.5"', dimensions: '1.5" x 1.5"', priceMultiplier: 1.25 },
-        { id: '2x2', name: '2" x 2"', dimensions: '2" x 2"', priceMultiplier: 1.5 },
-        { id: '2.5x2.5', name: '2.5" x 2.5"', dimensions: '2.5" x 2.5"', priceMultiplier: 1.75 },
-        { id: '3x3', name: '3" x 3"', dimensions: '3" x 3"', priceMultiplier: 2.0 },
-        { id: '4x4', name: '4" x 4"', dimensions: '4" x 4"', priceMultiplier: 2.5 },
-        { id: 'custom', name: 'Custom Size', dimensions: 'Custom dimensions', priceMultiplier: 3.0 },
-      ],
+
       stockOptions: [
         { 
           id: 'standard', 
@@ -105,6 +95,22 @@ export default function RollLabelsProductPage() {
     ],
   }
 
+  // Calculate size multiplier based on area
+  const calculateSizeMultiplier = () => {
+    const width = parseFloat(labelSize.width) || 1
+    const length = parseFloat(labelSize.length) || 1
+    const area = width * length
+    
+    // Base pricing on area (square inches)
+    if (area <= 1) return 1.0
+    if (area <= 2.25) return 1.25  // 1.5" x 1.5"
+    if (area <= 4) return 1.5      // 2" x 2"
+    if (area <= 6.25) return 1.75  // 2.5" x 2.5"
+    if (area <= 9) return 2.0      // 3" x 3"
+    if (area <= 16) return 2.5     // 4" x 4"
+    return Math.min(3.0, 1 + (area - 1) * 0.15) // Cap at 3x for very large sizes
+  }
+
   // Calculate pricing based on selections
   const calculatePricing = async () => {
     setPriceLoading(true)
@@ -116,7 +122,8 @@ export default function RollLabelsProductPage() {
         productId: rollLabelsData.id,
         productType: 'roll-labels',
         quantity,
-        size: selectedSize,
+        width: labelSize.width,
+        length: labelSize.length,
         shape: selectedShape,
         paperType: selectedStock,
         finish: selectedFinish,
@@ -125,12 +132,12 @@ export default function RollLabelsProductPage() {
       }
 
       const selectedShapeData = rollLabelsData.specifications.shapes.find(s => s.id === selectedShape)
-      const selectedSizeData = rollLabelsData.specifications.sizes.find(s => s.id === selectedSize)
+      const sizeMultiplier = calculateSizeMultiplier()
       const selectedStockData = rollLabelsData.specifications.stockOptions.find(s => s.id === selectedStock)
       const selectedFinishData = rollLabelsData.specifications.finishes.find(f => f.id === selectedFinish)
       
       const totalMultiplier = (selectedShapeData?.priceMultiplier || 1) * 
-                             (selectedSizeData?.priceMultiplier || 1) * 
+                             sizeMultiplier * 
                              (selectedStockData?.priceMultiplier || 1) * 
                              (selectedFinishData?.priceMultiplier || 1)
 
@@ -138,7 +145,7 @@ export default function RollLabelsProductPage() {
         id: rollLabelsData.id,
         basePrice: rollLabelsData.basePrice * totalMultiplier,
         specifications: {
-          sizes: rollLabelsData.specifications.sizes,
+          sizes: [{ id: 'custom', priceMultiplier: 1 }],
           paperTypes: [{ id: selectedStock, priceMultiplier: 1 }],
           finishes: [{ id: selectedFinish, priceMultiplier: 1 }],
           turnaroundTimes: [{ id: 'standard', priceMultiplier: 1 }],
@@ -157,7 +164,7 @@ export default function RollLabelsProductPage() {
 
   useEffect(() => {
     calculatePricing()
-  }, [selectedSize, selectedShape, selectedStock, selectedFinish, quantity])
+  }, [labelSize, selectedShape, selectedStock, selectedFinish, quantity])
 
   const handleAddToCart = async () => {
     setAddingToCart(true)
@@ -171,14 +178,15 @@ export default function RollLabelsProductPage() {
         unitPrice: calculatedPrice?.unitPrice || 0,
         specifications: {
           shape: selectedShape,
-          size: selectedSize,
+          width: labelSize.width,
+          length: labelSize.length,
           paperType: selectedStock,
           finish: selectedFinish,
           turnaroundTime: 'standard',
         },
         customizations: {
           uploadedFiles: [],
-          specialInstructions: showCustomSize ? `Custom Size: ${customSize.width}"W x ${customSize.height}"H` : '',
+          specialInstructions: `Size: ${labelSize.width}" W x ${labelSize.length}" L`,
         },
         addedAt: new Date(),
       }
@@ -194,10 +202,7 @@ export default function RollLabelsProductPage() {
     }
   }
 
-  const handleSizeChange = (sizeId: string) => {
-    setSelectedSize(sizeId)
-    setShowCustomSize(sizeId === 'custom')
-  }
+
 
   const getCurrentQuantityTier = () => {
     return rollLabelsData.quantityPricing.find(tier => quantity >= tier.min && quantity <= tier.max) || rollLabelsData.quantityPricing[0]
@@ -342,56 +347,45 @@ export default function RollLabelsProductPage() {
             {/* Size Selection */}
             <div className="mb-6">
               <label className="block text-sm font-semibold text-gray-700 mb-3">Label Size</label>
-              <div className="grid grid-cols-2 gap-2">
-                {rollLabelsData.specifications.sizes.map((size) => (
-                  <label key={size.id} className={`flex flex-col p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-all duration-200 ${size.id === 'custom' ? 'col-span-2' : ''}`}>
+              <div className="p-4 border border-gray-200 rounded-lg bg-gray-50">
+                <div className="flex space-x-4">
+                  <div className="flex-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Width (inches)</label>
                     <input
-                      type="radio"
-                      name="size"
-                      value={size.id}
-                      checked={selectedSize === size.id}
-                      onChange={() => handleSizeChange(size.id)}
-                      className="text-lettuce-green focus:ring-lettuce-green mb-1"
+                      type="number"
+                      value={labelSize.width}
+                      onChange={(e) => setLabelSize({...labelSize, width: e.target.value})}
+                      placeholder="2.0"
+                      min="0.5"
+                      max="12"
+                      step="0.1"
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-lettuce-green focus:border-lettuce-green"
                     />
-                    <div className="flex-1">
-                      <p className="font-medium text-gray-900 text-xs">{size.name}</p>
-                      <p className="text-xs text-gray-500">{size.dimensions}</p>
-                      {size.priceMultiplier > 1 && size.id !== 'custom' && (
-                        <p className="text-xs text-gray-600 mt-1">+{Math.round((size.priceMultiplier - 1) * 100)}%</p>
-                      )}
-                    </div>
-                  </label>
-                ))}
-              </div>
-              
-              {/* Custom Size Input */}
-              {showCustomSize && (
-                <div className="mt-3 p-3 bg-gray-50 rounded-lg">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Custom Dimensions</label>
-                  <div className="flex space-x-3">
-                    <div className="flex-1">
-                      <label className="block text-xs text-gray-500 mb-1">Width (inches)</label>
-                      <input
-                        type="number"
-                        value={customSize.width}
-                        onChange={(e) => setCustomSize({...customSize, width: e.target.value})}
-                        placeholder="1.5"
-                        className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <label className="block text-xs text-gray-500 mb-1">Height (inches)</label>
-                      <input
-                        type="number"
-                        value={customSize.height}
-                        onChange={(e) => setCustomSize({...customSize, height: e.target.value})}
-                        placeholder="1.5"
-                        className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm"
-                      />
-                    </div>
+                  </div>
+                  <div className="flex items-end pb-2">
+                    <span className="text-gray-500 text-lg font-medium">×</span>
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Length (inches)</label>
+                    <input
+                      type="number"
+                      value={labelSize.length}
+                      onChange={(e) => setLabelSize({...labelSize, length: e.target.value})}
+                      placeholder="2.0"
+                      min="0.5"
+                      max="12"
+                      step="0.1"
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-lettuce-green focus:border-lettuce-green"
+                    />
                   </div>
                 </div>
-              )}
+                <div className="mt-2 text-center">
+                  <span className="text-xs text-gray-500">
+                    Size: {labelSize.width}" × {labelSize.length}" 
+                    ({(parseFloat(labelSize.width || '0') * parseFloat(labelSize.length || '0')).toFixed(1)} sq in)
+                  </span>
+                </div>
+              </div>
             </div>
 
             {/* Stock Selection */}
