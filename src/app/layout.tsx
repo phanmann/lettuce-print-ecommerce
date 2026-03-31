@@ -4,15 +4,19 @@ import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ 
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: {
-    default: 'Lettuce Print - Brooklyn\'s Premier Printing Service',
+    default: 'Lettuce Print - Brooklyn\'s Creative Print Partner',
     template: '%s | Lettuce Print'
   },
-  description: 'Professional B2B printing services in Brooklyn. Business cards, flyers, banners, and more with local expertise and fast turnaround.',
-  keywords: 'printing, Brooklyn, business cards, flyers, banners, B2B printing, local printing',
+  description: 'Brooklyn\'s creative partner for premium print experiences. Transform your brand through meticulous craftsmanship and sophisticated design.',
+  keywords: 'premium printing, Brooklyn, creative partner, business cards, marketing materials, luxury print, craftsmanship, design',
   authors: [{ name: 'Lettuce Print' }],
   creator: 'Lettuce Print',
   publisher: 'Lettuce Print',
@@ -26,8 +30,8 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: 'Lettuce Print - Brooklyn\'s Premier Printing Service',
-    description: 'Professional B2B printing services in Brooklyn. Business cards, flyers, banners, and more with local expertise and fast turnaround.',
+    title: 'Lettuce Print - Brooklyn\'s Creative Print Partner',
+    description: 'Brooklyn\'s creative partner for premium print experiences. Transform your brand through meticulous craftsmanship and sophisticated design.',
     url: '/',
     siteName: 'Lettuce Print',
     images: [
@@ -35,7 +39,7 @@ export const metadata: Metadata = {
         url: '/images/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Lettuce Print - Brooklyn Printing Services',
+        alt: 'Lettuce Print - Premium Brooklyn Printing Services',
       }
     ],
     locale: 'en_US',
@@ -43,8 +47,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Lettuce Print - Brooklyn\'s Premier Printing Service',
-    description: 'Professional B2B printing services in Brooklyn. Business cards, flyers, banners, and more with local expertise and fast turnaround.',
+    title: 'Lettuce Print - Brooklyn\'s Creative Print Partner',
+    description: 'Brooklyn\'s creative partner for premium print experiences. Transform your brand through meticulous craftsmanship and sophisticated design.',
     images: ['/images/og-image.jpg'],
   },
   robots: {
@@ -74,7 +78,7 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
         <link rel="manifest" href="/favicon/site.webmanifest" />
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className} antialiased`}>
         <Header />
         <main className="min-h-screen">
           {children}

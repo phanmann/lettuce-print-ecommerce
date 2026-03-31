@@ -1,64 +1,80 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   return (
-    <header className="bg-white shadow-md sticky top-0 z-50">
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-premium-white/95 backdrop-blur-md shadow-sm' : 'bg-transparent'}`}>
       <div className="container-custom">
-        <div className="flex justify-between items-center py-4">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-lettuce-green rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">L</span>
-            </div>
-            <span className="text-xl font-bold text-gray-800">Lettuce Print</span>
+        <div className="flex justify-between items-center py-6">
+          {/* Premium Logo */}
+          <Link href="/" className="flex items-center group">
+            <Image 
+              src="/brand-assets/logos/LP_Logos_Wordmark-Green.png" 
+              alt="Lettuce Print"
+              width={180}
+              height={40}
+              className="h-10 w-auto group-hover:scale-105 transition-transform duration-300"
+            />
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
-            <Link href="/" className="text-gray-700 hover:text-lettuce-green font-medium transition-colors">
-              Home
-            </Link>
-            <Link href="/products" className="text-gray-700 hover:text-lettuce-green font-medium transition-colors">
-              Products
-            </Link>
-            <Link href="/services" className="text-gray-700 hover:text-lettuce-green font-medium transition-colors">
+          {/* Premium Desktop Navigation */}
+          <nav className="hidden lg:flex items-center space-x-10">
+            <Link 
+              href="/services" 
+              className={`font-medium transition-colors duration-300 ${isScrolled ? 'text-neutral-700 hover:text-lettuce-green' : 'text-neutral-700 hover:text-lettuce-green'}`}
+            >
               Services
             </Link>
-            <Link href="/about" className="text-gray-700 hover:text-lettuce-green font-medium transition-colors">
+            <Link 
+              href="/portfolio" 
+              className={`font-medium transition-colors duration-300 ${isScrolled ? 'text-neutral-700 hover:text-lettuce-green' : 'text-neutral-700 hover:text-lettuce-green'}`}
+            >
+              Portfolio
+            </Link>
+            <Link 
+              href="/about" 
+              className={`font-medium transition-colors duration-300 ${isScrolled ? 'text-neutral-700 hover:text-lettuce-green' : 'text-neutral-700 hover:text-lettuce-green'}`}
+            >
               About
             </Link>
-            <Link href="/contact" className="text-gray-700 hover:text-lettuce-green font-medium transition-colors">
+            <Link 
+              href="/contact" 
+              className={`font-medium transition-colors duration-300 ${isScrolled ? 'text-neutral-700 hover:text-lettuce-green' : 'text-neutral-700 hover:text-lettuce-green'}`}
+            >
               Contact
             </Link>
           </nav>
 
-          {/* Desktop CTA */}
-          <div className="hidden md:flex items-center space-x-4">
-            <Link href="/quote" className="btn-primary">
-              Get Quote
-            </Link>
-            <Link href="/cart" className="relative">
-              <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 11-4 0v-6m4 0V9a2 2 0 10-4 0v4.01" />
-              </svg>
-              <span className="absolute -top-2 -right-2 bg-lettuce-green text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                0
-              </span>
+          {/* Premium Desktop CTA */}
+          <div className="hidden lg:flex items-center space-x-6">
+            <Link 
+              href="/quote" 
+              className="btn-premium-primary px-8 py-3 text-sm"
+            >
+              Start Project
             </Link>
           </div>
 
-          {/* Mobile menu button */}
+          {/* Premium Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 rounded-md text-gray-700 hover:text-lettuce-green focus:outline-none"
+            className="lg:hidden p-3 rounded-full bg-neutral-100 hover:bg-neutral-200 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-lettuce-green focus:ring-opacity-50"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-neutral-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {isMenuOpen ? (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               ) : (
@@ -68,51 +84,44 @@ export default function Header() {
           </button>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Premium Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 py-4">
-            <nav className="flex flex-col space-y-4">
-              <Link 
-                href="/" 
-                className="text-gray-700 hover:text-lettuce-green font-medium transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Home
-              </Link>
-              <Link 
-                href="/products" 
-                className="text-gray-700 hover:text-lettuce-green font-medium transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Products
-              </Link>
+          <div className="lg:hidden bg-premium-white/95 backdrop-blur-md rounded-2xl mt-4 p-6 border border-neutral-100 animate-premium-scale-in">
+            <nav className="flex flex-col space-y-6">
               <Link 
                 href="/services" 
-                className="text-gray-700 hover:text-lettuce-green font-medium transition-colors"
+                className="text-lg font-medium text-neutral-700 hover:text-lettuce-green transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Services
               </Link>
               <Link 
+                href="/portfolio" 
+                className="text-lg font-medium text-neutral-700 hover:text-lettuce-green transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Portfolio
+              </Link>
+              <Link 
                 href="/about" 
-                className="text-gray-700 hover:text-lettuce-green font-medium transition-colors"
+                className="text-lg font-medium text-neutral-700 hover:text-lettuce-green transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 About
               </Link>
               <Link 
                 href="/contact" 
-                className="text-gray-700 hover:text-lettuce-green font-medium transition-colors"
+                className="text-lg font-medium text-neutral-700 hover:text-lettuce-green transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Contact
               </Link>
               <Link 
                 href="/quote" 
-                className="btn-primary w-full text-center"
+                className="btn-premium-primary w-full text-center py-4"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Get Quote
+                Start Your Project
               </Link>
             </nav>
           </div>
