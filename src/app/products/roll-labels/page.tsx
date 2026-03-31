@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { useCartStore } from '@/stores/cartStore'
 import { EnhancedPricingCalculator } from '@/utils/enhancedPricingCalculator'
 import { Star, ShoppingCart, Check, Calculator, Info, Upload, Package, Clock, Circle, Square, Shapes } from 'lucide-react'
-import LabelPreview from '@/components/LabelPreview'
+import EnhancedLabelPreview from '@/components/EnhancedLabelPreview'
 
 export default function RollLabelsProductPage() {
   const [selectedShape, setSelectedShape] = useState<'circle' | 'square' | 'custom'>('circle')
@@ -263,16 +263,34 @@ export default function RollLabelsProductPage() {
               </button>
             </div>
 
-            {/* Interactive Label Preview */}
+            {/* Enhanced Interactive Label Preview */}
             <div className="bg-white rounded-2xl overflow-hidden shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Label Preview</h3>
-              <LabelPreview
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <span className="bg-gradient-to-r from-lettuce-green to-green-600 bg-clip-text text-transparent">
+                  Professional Label Designer
+                </span>
+                <span className="ml-2 px-2 py-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs rounded-full font-bold">
+                  PRO
+                </span>
+              </h3>
+              <div className="mb-3 text-sm text-gray-600">
+                <div className="flex items-center space-x-4">
+                  <span>🤖 AI Background Removal</span>
+                  <span>✂️ Auto Cutlines</span>
+                  <span>🎨 Professional Tools</span>
+                </div>
+              </div>
+              <EnhancedLabelPreview
                 shape={selectedShape}
                 width={labelSize.width}
                 length={labelSize.length}
                 stock={selectedStock}
                 finish={selectedFinish}
                 onFileUpload={(files) => setUploadedFiles(prev => [...prev, ...files])}
+                onDesignChange={(design) => {
+                  // Store design data for pricing and production
+                  console.log('Design updated:', design)
+                }}
                 className="w-full"
               />
             </div>
