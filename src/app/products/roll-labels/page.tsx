@@ -4,13 +4,13 @@ import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { useCartStore } from '@/stores/cartStore'
 import { EnhancedPricingCalculator } from '@/utils/enhancedPricingCalculator'
-import { Star, ShoppingCart, Check, Calculator, Info, Upload, Package, Clock } from 'lucide-react'
-
-// Roll Labels Product Page with Integrated Pricing Calculator
-// Matches the design reference with clean layout and professional styling
+import { Star, ShoppingCart, Check, Calculator, Info, Upload, Package, Clock, Circle, Square, Shapes } from 'lucide-react'
 
 export default function RollLabelsProductPage() {
   const [selectedSize, setSelectedSize] = useState('1x1')
+  const [selectedShape, setSelectedShape] = useState('circle')
+  const [selectedStock, setSelectedStock] = useState('standard')
+  const [selectedFinish, setSelectedFinish] = useState('matte')
   const [quantity, setQuantity] = useState(100)
   const [calculatedPrice, setCalculatedPrice] = useState<any>(null)
   const [priceLoading, setPriceLoading] = useState(false)
@@ -26,29 +26,73 @@ export default function RollLabelsProductPage() {
   // Roll labels specific data
   const rollLabelsData = {
     id: 'roll-labels',
-    name: 'Circle Labels',
-    description: 'Premium roll labels perfect for product packaging, branding, and promotional use. Available in various sizes with custom printing options.',
+    name: 'Premium Roll Labels',
+    description: 'Premium roll labels perfect for product packaging, branding, and promotional use. Available in various shapes, sizes, and finishes with custom printing options.',
     rating: 4.8,
     reviewCount: 127,
     category: 'Labels & Stickers',
     basePrice: 35.00,
     images: ['/images/products/roll-labels-hero.jpg'],
     specifications: {
+      shapes: [
+        { 
+          id: 'circle', 
+          name: 'Circle', 
+          description: 'Round labels perfect for branding', 
+          priceMultiplier: 1.0,
+          icon: Circle 
+        },
+        { 
+          id: 'square', 
+          name: 'Square', 
+          description: 'Square labels for modern packaging', 
+          priceMultiplier: 1.1,
+          icon: Square 
+        },
+        { 
+          id: 'custom', 
+          name: 'Custom Shape', 
+          description: 'Any custom shape you need', 
+          priceMultiplier: 1.5,
+          icon: Shapes 
+        },
+      ],
       sizes: [
-        { id: '1x1', name: '1" x 1"', dimensions: '1" x 1" Circle', priceMultiplier: 1.0 },
-        { id: '2x2', name: '2" x 2"', dimensions: '2" x 2" Circle', priceMultiplier: 1.5 },
-        { id: '3x3', name: '3" x 3"', dimensions: '3" x 3" Circle', priceMultiplier: 2.0 },
-        { id: '4x4', name: '4" x 4"', dimensions: '4" x 4" Circle', priceMultiplier: 2.5 },
+        { id: '1x1', name: '1" x 1"', dimensions: '1" x 1"', priceMultiplier: 1.0 },
+        { id: '1.5x1.5', name: '1.5" x 1.5"', dimensions: '1.5" x 1.5"', priceMultiplier: 1.25 },
+        { id: '2x2', name: '2" x 2"', dimensions: '2" x 2"', priceMultiplier: 1.5 },
+        { id: '2.5x2.5', name: '2.5" x 2.5"', dimensions: '2.5" x 2.5"', priceMultiplier: 1.75 },
+        { id: '3x3', name: '3" x 3"', dimensions: '3" x 3"', priceMultiplier: 2.0 },
+        { id: '4x4', name: '4" x 4"', dimensions: '4" x 4"', priceMultiplier: 2.5 },
         { id: 'custom', name: 'Custom Size', dimensions: 'Custom dimensions', priceMultiplier: 3.0 },
       ],
-      paperTypes: [
-        { id: 'paper', name: 'Paper Labels', description: 'Standard paper material' },
-        { id: 'bopp', name: 'BOPP (Plastic)', description: 'Waterproof plastic material' },
-        { id: 'clear', name: 'Clear BOPP', description: 'Transparent material' },
+      stockOptions: [
+        { 
+          id: 'standard', 
+          name: 'Standard Paper', 
+          description: 'White paper material - cost effective',
+          priceMultiplier: 1.0 
+        },
+        { 
+          id: 'bopp', 
+          name: 'BOPP (Waterproof)', 
+          description: 'Durable plastic material - waterproof',
+          priceMultiplier: 1.4 
+        },
       ],
       finishes: [
-        { id: 'gloss', name: 'Gloss Finish', description: 'High-gloss finish' },
-        { id: 'matte', name: 'Matte Finish', description: 'Non-glare matte finish' },
+        { 
+          id: 'matte', 
+          name: 'Matte Finish', 
+          description: 'Non-glare matte finish',
+          priceMultiplier: 1.0 
+        },
+        { 
+          id: 'gloss', 
+          name: 'Gloss Finish', 
+          description: 'High-gloss finish',
+          priceMultiplier: 1.1 
+        },
       ],
     },
     quantityPricing: [
@@ -65,7 +109,6 @@ export default function RollLabelsProductPage() {
   const calculatePricing = async () => {
     setPriceLoading(true)
     
-    // Add a small delay for better UX
     await new Promise(resolve => setTimeout(resolve, 300))
     
     try {
@@ -74,35 +117,36 @@ export default function RollLabelsProductPage() {
         productType: 'roll-labels',
         quantity,
         size: selectedSize,
-        paperType: 'paper',
-        finish: 'gloss',
+        shape: selectedShape,
+        paperType: selectedStock,
+        finish: selectedFinish,
         turnaroundTime: 'standard',
         shippingZipCode: '11201',
       }
 
-      // Mock product for enhanced calculator
+      const selectedShapeData = rollLabelsData.specifications.shapes.find(s => s.id === selectedShape)
+      const selectedSizeData = rollLabelsData.specifications.sizes.find(s => s.id === selectedSize)
+      const selectedStockData = rollLabelsData.specifications.stockOptions.find(s => s.id === selectedStock)
+      const selectedFinishData = rollLabelsData.specifications.finishes.find(f => f.id === selectedFinish)
+      
+      const totalMultiplier = (selectedShapeData?.priceMultiplier || 1) * 
+                             (selectedSizeData?.priceMultiplier || 1) * 
+                             (selectedStockData?.priceMultiplier || 1) * 
+                             (selectedFinishData?.priceMultiplier || 1)
+
       const mockProduct = {
         id: rollLabelsData.id,
-        basePrice: rollLabelsData.basePrice,
+        basePrice: rollLabelsData.basePrice * totalMultiplier,
         specifications: {
           sizes: rollLabelsData.specifications.sizes,
-          paperTypes: [{ id: 'paper', priceMultiplier: 1 }],
-          finishes: [{ id: 'gloss', priceMultiplier: 1 }],
+          paperTypes: [{ id: selectedStock, priceMultiplier: 1 }],
+          finishes: [{ id: selectedFinish, priceMultiplier: 1 }],
           turnaroundTimes: [{ id: 'standard', priceMultiplier: 1 }],
         },
       } as any
 
       const result = EnhancedPricingCalculator.calculate(calculatorInputs, mockProduct)
       setCalculatedPrice(result)
-      
-      // Get quantity suggestions
-      const suggestions = EnhancedPricingCalculator.suggestQuantities(rollLabelsData.id, quantity, {
-        size: selectedSize,
-        paperType: 'paper',
-        finish: 'gloss',
-        turnaroundTime: 'standard',
-      })
-      setQuantitySuggestions(suggestions)
       
     } catch (error) {
       console.error('Error calculating pricing:', error)
@@ -113,7 +157,7 @@ export default function RollLabelsProductPage() {
 
   useEffect(() => {
     calculatePricing()
-  }, [selectedSize, quantity])
+  }, [selectedSize, selectedShape, selectedStock, selectedFinish, quantity])
 
   const handleAddToCart = async () => {
     setAddingToCart(true)
@@ -126,9 +170,10 @@ export default function RollLabelsProductPage() {
         quantity,
         unitPrice: calculatedPrice?.unitPrice || 0,
         specifications: {
+          shape: selectedShape,
           size: selectedSize,
-          paperType: 'paper',
-          finish: 'gloss',
+          paperType: selectedStock,
+          finish: selectedFinish,
           turnaroundTime: 'standard',
         },
         customizations: {
@@ -139,8 +184,6 @@ export default function RollLabelsProductPage() {
       }
       
       addToCart(cartItem)
-      
-      // Show success state
       setAddedToCart(true)
       setTimeout(() => setAddedToCart(false), 3000)
       
@@ -153,11 +196,7 @@ export default function RollLabelsProductPage() {
 
   const handleSizeChange = (sizeId: string) => {
     setSelectedSize(sizeId)
-    if (sizeId === 'custom') {
-      setShowCustomSize(true)
-    } else {
-      setShowCustomSize(false)
-    }
+    setShowCustomSize(sizeId === 'custom')
   }
 
   const getCurrentQuantityTier = () => {
@@ -165,6 +204,9 @@ export default function RollLabelsProductPage() {
   }
 
   const currentTier = getCurrentQuantityTier()
+  const selectedShapeData = rollLabelsData.specifications.shapes.find(s => s.id === selectedShape)
+  const selectedStockData = rollLabelsData.specifications.stockOptions.find(s => s.id === selectedStock)
+  const selectedFinishData = rollLabelsData.specifications.finishes.find(f => f.id === selectedFinish)
 
   return (
     <div className="min-h-screen bg-white">
@@ -217,8 +259,8 @@ export default function RollLabelsProductPage() {
               <div className="aspect-square bg-gradient-to-br from-lettuce-pale to-white flex items-center justify-center">
                 <div className="text-center animate-scale-in">
                   <Package className="h-32 w-32 text-lettuce-green mx-auto mb-6" />
-                  <p className="text-gray-600 text-xl font-medium mb-2">Roll Labels Preview</p>
-                  <p className="text-gray-500 text-sm">High-quality circular labels on rolls</p>
+                  <p className="text-gray-600 text-xl font-medium mb-2">{selectedShapeData?.name} Labels Preview</p>
+                  <p className="text-gray-500 text-sm">{selectedStockData?.name} - {selectedFinishData?.name}</p>
                 </div>
               </div>
             </div>
@@ -230,29 +272,29 @@ export default function RollLabelsProductPage() {
                 <div className="flex items-start space-x-3">
                   <Check className="h-5 w-5 text-lettuce-green mt-0.5" />
                   <div>
+                    <p className="font-medium text-gray-900">Multiple Shapes</p>
+                    <p className="text-sm text-gray-600">Circle, square, and custom shapes</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <Check className="h-5 w-5 text-green-600 mt-0.5" />
+                  <div>
                     <p className="font-medium text-gray-900">Premium Materials</p>
-                    <p className="text-sm text-gray-600">Durable paper and plastic options</p>
+                    <p className="text-sm text-gray-600">Standard paper and waterproof BOPP</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
                   <Check className="h-5 w-5 text-green-600 mt-0.5" />
                   <div>
-                    <p className="font-medium text-gray-900">Custom Sizes</p>
-                    <p className="text-sm text-gray-600">Standard and custom dimensions</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <Check className="h-5 w-5 text-green-600 mt-0.5" />
-                  <div>
-                    <p className="font-medium text-gray-900">Fast Turnaround</p>
-                    <p className="text-sm text-gray-600">Quick production and delivery</p>
+                    <p className="font-medium text-gray-900">Finish Options</p>
+                    <p className="text-sm text-gray-600">Matte and gloss finishes available</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
                   <Check className="h-5 w-5 text-green-600 mt-0.5" />
                   <div>
                     <p className="font-medium text-gray-900">Volume Discounts</p>
-                    <p className="text-sm text-gray-600">Save more with larger quantities</p>
+                    <p className="text-sm text-gray-600">Save up to 74% with larger quantities</p>
                   </div>
                 </div>
               </div>
@@ -263,38 +305,70 @@ export default function RollLabelsProductPage() {
           <div className="bg-white border border-gray-200 rounded-2xl p-8 sticky top-8 shadow-lg animate-slide-up">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Pricing Calculator</h2>
             
+            {/* Shape Selection */}
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">Label Shape</label>
+              <div className="grid grid-cols-1 gap-2">
+                {rollLabelsData.specifications.shapes.map((shape) => {
+                  const IconComponent = shape.icon
+                  return (
+                    <label key={shape.id} className="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-all duration-200">
+                      <input
+                        type="radio"
+                        name="shape"
+                        value={shape.id}
+                        checked={selectedShape === shape.id}
+                        onChange={() => setSelectedShape(shape.id)}
+                        className="text-lettuce-green focus:ring-lettuce-green"
+                      />
+                      <div className="ml-3 flex-1 flex items-center space-x-3">
+                        <IconComponent className="h-4 w-4 text-lettuce-green" />
+                        <div className="flex-1">
+                          <p className="font-medium text-gray-900 text-sm">{shape.name}</p>
+                          <p className="text-xs text-gray-500">{shape.description}</p>
+                        </div>
+                        {shape.priceMultiplier > 1 && (
+                          <div className="text-xs text-gray-600">
+                            +{Math.round((shape.priceMultiplier - 1) * 100)}%
+                          </div>
+                        )}
+                      </div>
+                    </label>
+                  )
+                })}
+              </div>
+            </div>
+
             {/* Size Selection */}
-            <div className="mb-8">
-              <label className="block text-sm font-semibold text-gray-700 mb-4">Label Size</label>
-              <div className="space-y-3">
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">Label Size</label>
+              <div className="grid grid-cols-2 gap-2">
                 {rollLabelsData.specifications.sizes.map((size) => (
-                  <label key={size.id} className="flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-all duration-200 hover:shadow-sm">
+                  <label key={size.id} className={`flex flex-col p-2 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-all duration-200 ${size.id === 'custom' ? 'col-span-2' : ''}`}>
                     <input
                       type="radio"
                       name="size"
                       value={size.id}
                       checked={selectedSize === size.id}
                       onChange={() => handleSizeChange(size.id)}
-                      className="text-lettuce-green focus:ring-lettuce-green"
+                      className="text-lettuce-green focus:ring-lettuce-green mb-1"
                     />
-                    <div className="ml-4 flex-1">
-                      <p className="font-medium text-gray-900">{size.name}</p>
-                      <p className="text-sm text-gray-500">{size.dimensions}</p>
+                    <div className="flex-1">
+                      <p className="font-medium text-gray-900 text-xs">{size.name}</p>
+                      <p className="text-xs text-gray-500">{size.dimensions}</p>
+                      {size.priceMultiplier > 1 && size.id !== 'custom' && (
+                        <p className="text-xs text-gray-600 mt-1">+{Math.round((size.priceMultiplier - 1) * 100)}%</p>
+                      )}
                     </div>
-                    {size.id !== 'custom' && (
-                      <div className="text-sm text-gray-600">
-                        {size.priceMultiplier > 1 && `+${Math.round((size.priceMultiplier - 1) * 100)}%`}
-                      </div>
-                    )}
                   </label>
                 ))}
               </div>
               
               {/* Custom Size Input */}
               {showCustomSize && (
-                <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                <div className="mt-3 p-3 bg-gray-50 rounded-lg">
                   <label className="block text-sm font-medium text-gray-700 mb-2">Custom Dimensions</label>
-                  <div className="flex space-x-4">
+                  <div className="flex space-x-3">
                     <div className="flex-1">
                       <label className="block text-xs text-gray-500 mb-1">Width (inches)</label>
                       <input
@@ -302,7 +376,7 @@ export default function RollLabelsProductPage() {
                         value={customSize.width}
                         onChange={(e) => setCustomSize({...customSize, width: e.target.value})}
                         placeholder="1.5"
-                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                        className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm"
                       />
                     </div>
                     <div className="flex-1">
@@ -312,12 +386,68 @@ export default function RollLabelsProductPage() {
                         value={customSize.height}
                         onChange={(e) => setCustomSize({...customSize, height: e.target.value})}
                         placeholder="1.5"
-                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                        className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm"
                       />
                     </div>
                   </div>
                 </div>
               )}
+            </div>
+
+            {/* Stock Selection */}
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">Stock Material</label>
+              <div className="space-y-2">
+                {rollLabelsData.specifications.stockOptions.map((stock) => (
+                  <label key={stock.id} className="flex items-start p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-all duration-200">
+                    <input
+                      type="radio"
+                      name="stock"
+                      value={stock.id}
+                      checked={selectedStock === stock.id}
+                      onChange={() => setSelectedStock(stock.id)}
+                      className="text-lettuce-green focus:ring-lettuce-green mt-1"
+                    />
+                    <div className="ml-3 flex-1">
+                      <div className="flex justify-between items-start mb-1">
+                        <p className="font-medium text-gray-900 text-sm">{stock.name}</p>
+                        {stock.priceMultiplier > 1 && (
+                          <span className="text-xs text-gray-600">+{Math.round((stock.priceMultiplier - 1) * 100)}%</span>
+                        )}
+                      </div>
+                      <p className="text-xs text-gray-600">{stock.description}</p>
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Finish Selection */}
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">Finish</label>
+              <div className="space-y-2">
+                {rollLabelsData.specifications.finishes.map((finish) => (
+                  <label key={finish.id} className="flex items-start p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-all duration-200">
+                    <input
+                      type="radio"
+                      name="finish"
+                      value={finish.id}
+                      checked={selectedFinish === finish.id}
+                      onChange={() => setSelectedFinish(finish.id)}
+                      className="text-lettuce-green focus:ring-lettuce-green mt-1"
+                    />
+                    <div className="ml-3 flex-1">
+                      <div className="flex justify-between items-start mb-1">
+                        <p className="font-medium text-gray-900 text-sm">{finish.name}</p>
+                        {finish.priceMultiplier > 1 && (
+                          <span className="text-xs text-gray-600">+{Math.round((finish.priceMultiplier - 1) * 100)}%</span>
+                        )}
+                      </div>
+                      <p className="text-xs text-gray-600">{finish.description}</p>
+                    </div>
+                  </label>
+                ))}
+              </div>
             </div>
 
             {/* Quantity Selection */}
@@ -368,7 +498,6 @@ export default function RollLabelsProductPage() {
                       {tier.savings > 0 && (
                         <div className="text-right">
                           <p className="text-sm font-medium text-lettuce-green">Save {tier.savings}%</p>
-                          <p className="text-xs text-gray-500">${(tier.unitPrice * quantity).toFixed(2)} total</p>
                         </div>
                       )}
                     </div>
