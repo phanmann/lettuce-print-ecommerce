@@ -156,4 +156,91 @@ body {
   .premium-shadow-subtle {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
   }
+
+  /* E-commerce Button Styles */
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 bg-lettuce-green hover:bg-lettuce-dark text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-lettuce-green focus:ring-opacity-50;
+  }
+  
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-6 py-3 bg-white hover:bg-gray-50 text-gray-700 font-medium rounded-lg border border-gray-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-lettuce-green focus:ring-opacity-50;
+  }
+  
+  .btn-danger {
+    @apply inline-flex items-center justify-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50;
+  }
+  
+  .btn-outline {
+    @apply inline-flex items-center justify-center px-6 py-3 bg-transparent hover:bg-lettuce-green hover:bg-opacity-10 text-lettuce-green font-medium rounded-lg border border-lettuce-green transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-lettuce-green focus:ring-opacity-50;
+  }
+
+  /* E-commerce Form Styles */
+  .form-input {
+    @apply w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-lettuce-green focus:border-lettuce-green transition-colors duration-200;
+  }
+  
+  .form-select {
+    @apply w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-lettuce-green focus:border-lettuce-green transition-colors duration-200 bg-white;
+  }
+  
+  .form-textarea {
+    @apply w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-lettuce-green focus:border-lettuce-green transition-colors duration-200 resize-vertical;
+  }
+
+  /* E-commerce Card Styles */
+  .card {
+    @apply bg-white rounded-lg shadow-md border border-gray-200;
+  }
+  
+  .card-hover {
+    @apply card hover:shadow-lg transition-shadow duration-200;
+  }
+
+  /* E-commerce Status Badges */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+  
+  .badge-success {
+    @apply badge bg-green-100 text-green-800;
+  }
+  
+  .badge-warning {
+    @apply badge bg-yellow-100 text-yellow-800;
+  }
+  
+  .badge-error {
+    @apply badge bg-red-100 text-red-800;
+  }
+  
+  .badge-info {
+    @apply badge bg-blue-100 text-blue-800;
+  }
+
+  /* Loading States */
+  .loading-spinner {
+    @apply animate-spin rounded-full h-4 w-4 border-b-2 border-current;
+  }
+  
+  .loading-dots {
+    @apply inline-flex space-x-1;
+  }
+  
+  .loading-dots div {
+    @apply w-2 h-2 bg-current rounded-full animate-bounce;
+    animation-delay: calc(var(--i) * 0.1s);
+  }
+
+  /* Price Display */
+  .price {
+    @apply font-bold text-lettuce-green;
+  }
+  
+  .price-strikethrough {
+    @apply text-gray-500 line-through;
+  }
+  
+  .price-saving {
+    @apply text-green-600 font-semibold;
+  }
 }

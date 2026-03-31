@@ -3,10 +3,13 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useCartItemCount } from '@/stores/cartStore'
+import { ShoppingCart } from 'lucide-react'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const cartItemCount = useCartItemCount()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -62,6 +65,17 @@ export default function Header() {
           {/* Premium Desktop CTA */}
           <div className="hidden lg:flex items-center space-x-6">
             <Link 
+              href="/cart" 
+              className="relative p-2 text-neutral-700 hover:text-lettuce-green transition-colors"
+            >
+              <ShoppingCart className="h-6 w-6" />
+              {cartItemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-lettuce-green text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
+            </Link>
+            <Link 
               href="/quote" 
               className="btn-premium-primary px-8 py-3 text-sm"
             >
@@ -115,6 +129,14 @@ export default function Header() {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Contact
+              </Link>
+              <Link 
+                href="/cart" 
+                className="flex items-center justify-center space-x-2 text-lg font-medium text-neutral-700 hover:text-lettuce-green transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <ShoppingCart className="h-5 w-5" />
+                <span>Cart ({cartItemCount})</span>
               </Link>
               <Link 
                 href="/quote" 

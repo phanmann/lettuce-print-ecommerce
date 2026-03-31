@@ -117,7 +117,7 @@ export default function About() {
               },
               {
                 title: 'Sustainability',
-                description: 'We're committed to environmentally responsible practices, using eco-friendly materials and minimizing waste in our production process.',
+                description: 'We\'re committed to environmentally responsible practices, using eco-friendly materials and minimizing waste in our production process.',
                 icon: (
                   <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -135,7 +135,7 @@ export default function About() {
               },
               {
                 title: 'Community',
-                description: 'As a Brooklyn-based business, we're proud to support our local community and contribute to the vibrant creative ecosystem.',
+                description: 'As a Brooklyn-based business, we\'re proud to support our local community and contribute to the vibrant creative ecosystem.',
                 icon: (
                   <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />

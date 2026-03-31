@@ -1,26 +1,28 @@
-export default function CartPage() {
-  const cartItems = [
-    {
-      id: 1,
-      name: 'Business Cards',
-      description: 'Premium business cards with glossy finish',
-      quantity: 500,
-      price: 75.00,
-      image: '/images/business-cards.jpg'
-    },
-    {
-      id: 2,
-      name: 'Flyers',
-      description: 'Marketing flyers, full color',
-      quantity: 1000,
-      price: 150.00,
-      image: '/images/flyers.jpg'
-    }
-  ]
+'use client'
 
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price, 0)
-  const tax = subtotal * 0.08
-  const total = subtotal + tax
+import { useEffect } from 'react'
+import { useCartStore } from '@/stores/cartStore'
+import Image from 'next/image'
+import Link from 'next/link'
+
+export default function CartPage() {
+  const { cart, removeFromCart, updateQuantity, calculateTotals } = useCartStore()
+  
+  useEffect(() => {
+    calculateTotals()
+  }, [calculateTotals])
+
+  const handleQuantityUpdate = (itemId: string, newQuantity: number) => {
+    if (newQuantity <= 0) {
+      removeFromCart(itemId)
+    } else {
+      updateQuantity(itemId, newQuantity)
+    }
+  }
+
+  const handleRemoveItem = (itemId: string) => {
+    removeFromCart(itemId)
+  }
 
   return (
     <div className="py-8 bg-gray-50 min-h-screen">
@@ -35,18 +37,18 @@ export default function CartPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Cart Items */}
             <div className="lg:col-span-2">
-              {cartItems.length === 0 ? (
+              {cart.items.length === 0 ? (
                 <div className="bg-white rounded-lg shadow-md p-8 text-center">
                   <div className="text-6xl mb-4">🛒</div>
                   <h2 className="text-2xl font-bold text-gray-800 mb-2">Your cart is empty</h2>
                   <p className="text-gray-600 mb-6">Looks like you haven't added any items to your cart yet.</p>
-                  <a href="/products" className="btn-primary px-6 py-3">
+                  <Link href="/products" className="btn-primary px-6 py-3">
                     Continue Shopping
-                  </a>
+                  </Link>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {cartItems.map((item) => (
+                  {cart.items.map((item) => (
                     <div key={item.id} className="bg-white rounded-lg shadow-md p-6">
                       <div className="flex items-center space-x-4">
                         {/* Product Image */}
@@ -56,15 +58,47 @@ export default function CartPage() {
 
                         {/* Product Details */}
                         <div className="flex-grow">
-                          <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>
-                          <p className="text-gray-600 text-sm mb-2">{item.description}</p>
-                          <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
+                          <h3 className="text-lg font-semibold text-gray-800">{item.productName}</h3>
+                          <p className="text-gray-600 text-sm mb-2">{item.productDescription}</p>
+                          <div className="text-sm text-gray-500 space-y-1">
+                            <p>Quantity: {item.quantity}</p>
+                            {item.specifications.size && (
+                              <p>Size: {item.specifications.size}</p>
+                            )}
+                            {item.specifications.paperType && (
+                              <p>Paper: {item.specifications.paperType}</p>
+                            )}
+                            {item.specifications.finish && (
+                              <p>Finish: {item.specifications.finish}</p>
+                            )}
+                          </div>
+                          
+                          {/* Quantity Controls */}
+                          <div className="flex items-center space-x-2 mt-3">
+                            <button
+                              onClick={() => handleQuantityUpdate(item.id, item.quantity - 1)}
+                              className="p-1 rounded border border-gray-300 hover:bg-gray-50"
+                            >
+                              -
+                            </button>
+                            <span className="px-2">{item.quantity}</span>
+                            <button
+                              onClick={() => handleQuantityUpdate(item.id, item.quantity + 1)}
+                              className="p-1 rounded border border-gray-300 hover:bg-gray-50"
+                            >
+                              +
+                            </button>
+                          </div>
                         </div>
 
                         {/* Price and Actions */}
                         <div className="text-right">
-                          <p className="text-lg font-bold text-lettuce-green">${item.price.toFixed(2)}</p>
-                          <button className="text-red-500 hover:text-red-700 text-sm mt-2">
+                          <p className="text-lg font-bold text-lettuce-green">${item.totalPrice.toFixed(2)}</p>
+                          <p className="text-sm text-gray-500">${item.unitPrice.toFixed(2)} each</p>
+                          <button 
+                            onClick={() => handleRemoveItem(item.id)}
+                            className="text-red-500 hover:text-red-700 text-sm mt-2"
+                          >
                             Remove
                           </button>
                         </div>
@@ -84,23 +118,32 @@ export default function CartPage() {
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Subtotal</span>
-                    <span className="font-semibold">${subtotal.toFixed(2)}</span>
+                    <span className="font-semibold">${cart.subtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Tax (8%)</span>
-                    <span className="font-semibold">${tax.toFixed(2)}</span>
+                    <span className="text-gray-600">Tax</span>
+                    <span className="font-semibold">${cart.tax.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Shipping</span>
+                    <span className="font-semibold">${cart.shipping.toFixed(2)}</span>
                   </div>
                   <div className="border-t pt-3">
                     <div className="flex justify-between">
                       <span className="text-lg font-bold text-gray-800">Total</span>
-                      <span className="text-lg font-bold text-lettuce-green">${total.toFixed(2)}</span>
+                      <span className="text-lg font-bold text-lettuce-green">${cart.total.toFixed(2)}</span>
                     </div>
                   </div>
                 </div>
 
-                <button className="w-full btn-primary mt-6 py-3">
+                <Link 
+                  href={cart.items.length > 0 ? "/checkout" : "#"}
+                  className={`w-full btn-primary mt-6 py-3 block text-center ${
+                    cart.items.length === 0 ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                >
                   Proceed to Checkout
-                </button>
+                </Link>
               </div>
 
               {/* Continue Shopping */}
