@@ -2,21 +2,30 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 export default function Home() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const heroRef = useRef<HTMLElement>(null)
+  const circle1Ref = useRef<HTMLDivElement>(null)
+  const circle2Ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const updateMousePosition = (e: MouseEvent) => {
-      if (heroRef.current) {
+      if (heroRef.current && circle1Ref.current && circle2Ref.current) {
         const rect = heroRef.current.getBoundingClientRect()
-        const newPosition = {
-          x: e.clientX - rect.left,
-          y: e.clientY - rect.top,
-        }
-        setMousePosition(newPosition)
+        const x = e.clientX - rect.left
+        const y = e.clientY - rect.top
+
+        // Direct DOM manipulation - no React re-renders!
+        // Circle 1: More dramatic movement
+        const x1 = x * 0.3 - 192
+        const y1 = y * 0.3 - 192
+        circle1Ref.current.style.transform = `translate3d(${x1}px, ${y1}px, 0)`
+
+        // Circle 2: Subtle parallax movement
+        const x2 = x * 0.15 - 128
+        const y2 = y * 0.15 - 128
+        circle2Ref.current.style.transform = `translate3d(${x2}px, ${y2}px, 0)`
       }
     }
 
@@ -59,23 +68,23 @@ export default function Home() {
           </div>
         </div>
         
-        {/* Premium Background Elements with Cursor Following */}
+        {/* Premium Background Elements with Optimized Cursor Following */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {/* Cursor-following green circle - More visible and responsive */}
+          {/* Cursor-following green circle 1 - Direct DOM manipulation */}
           <div 
-            className="absolute w-96 h-96 bg-lettuce-green opacity-15 rounded-full blur-3xl transition-transform duration-200 ease-out"
+            ref={circle1Ref}
+            className="absolute w-96 h-96 bg-lettuce-green opacity-15 rounded-full blur-3xl transition-transform duration-200 ease-out will-change-transform"
             style={{
-              transform: `translate3d(${mousePosition.x * 0.3 - 192}px, ${mousePosition.y * 0.3 - 192}px, 0)`,
               left: '20%',
               top: '20%',
             }}
           />
           
-          {/* Second following circle for depth */}
+          {/* Cursor-following green circle 2 - Parallax effect */}
           <div 
-            className="absolute w-64 h-64 bg-lettuce-green opacity-8 rounded-full blur-2xl transition-transform duration-300 ease-out"
+            ref={circle2Ref}
+            className="absolute w-64 h-64 bg-lettuce-green opacity-8 rounded-full blur-2xl transition-transform duration-300 ease-out will-change-transform"
             style={{
-              transform: `translate3d(${mousePosition.x * 0.15 - 128}px, ${mousePosition.y * 0.15 - 128}px, 0)`,
               left: '60%',
               top: '40%',
             }}
