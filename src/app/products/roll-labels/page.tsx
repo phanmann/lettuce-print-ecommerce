@@ -73,14 +73,14 @@ export default function RollLabelsProductPage() {
       finishes: [
         { 
           id: 'matte', 
-          name: 'Matte Finish', 
-          description: 'Non-glare matte finish',
+          name: 'Matte Laminate', 
+          description: 'Non-glare matte laminate finish',
           priceMultiplier: 1.0 
         },
         { 
           id: 'gloss', 
-          name: 'Gloss Finish', 
-          description: 'High-gloss finish',
+          name: 'Gloss Laminate', 
+          description: 'High-gloss laminate finish',
           priceMultiplier: 1.1 
         },
       ],
