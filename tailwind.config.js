@@ -8,10 +8,23 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'lettuce-green': '#00a175',
-        'lettuce-dark': '#008060',
-        'lettuce-light': '#00c084',
-        'lettuce-pale': '#e6f7f2',
+        // Brooklyn Design System Colors
+        'lettuce-green': '#2e6b38',
+        'lettuce-dark': '#1f4526',
+        'lettuce-bright': '#3dba52',
+        'lettuce-pale': '#e6f4e8',
+        'brooklyn-white': '#ffffff',
+        'brooklyn-black': '#0d0d0d',
+        'brooklyn-yellow': '#f5e642',
+        'brooklyn-pink': '#f5a8c8',
+        'brooklyn-blue': '#a8d4f5',
+        'brooklyn-orange': '#f5a86e',
+        'brooklyn-brown': '#8b5e3c',
+        'brooklyn-cream': '#faf8f4',
+        'brooklyn-muted': '#666666',
+        'brooklyn-rule': '#ebebeb',
+        // Legacy colors for compatibility
+        'lettuce-light': '#3dba52',
         'neutral-50': '#fafafa',
         'neutral-100': '#f5f5f5',
         'neutral-200': '#e5e5e5',
@@ -26,8 +39,11 @@ module.exports = {
         'premium-warm': '#f9fafb',
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        'editorial': ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['DM Sans', 'system-ui', 'sans-serif'],
+        serif: ['Instrument Serif', 'serif'],
+        mono: ['DM Mono', 'monospace'],
+        'editorial': ['Instrument Serif', 'serif'],
+        'brooklyn': ['DM Sans', 'system-ui', 'sans-serif'],
       },
       fontSize: {
         'xs': ['0.75rem', { lineHeight: '1rem' }],
@@ -54,6 +70,9 @@ module.exports = {
         'fade-in': 'fadeIn 0.8s ease-out',
         'slide-up': 'slideUp 0.6s ease-out',
         'scale-in': 'scaleIn 0.5s ease-out',
+        'scroll': 'scroll 26s linear infinite',
+        'scrollLeft': 'scrollLeft 32s linear infinite',
+        'tick': 'tick 28s linear infinite',
       },
       keyframes: {
         fadeIn: {
@@ -67,6 +86,18 @@ module.exports = {
         scaleIn: {
           '0%': { transform: 'scale(0.95)', opacity: '0' },
           '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+        scroll: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+        scrollLeft: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+        tick: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
         },
       },
     },

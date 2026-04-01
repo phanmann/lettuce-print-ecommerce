@@ -1,10 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Image from 'next/image'
+import Link from 'next/link'
 import { useCartStore } from '@/stores/cartStore'
 import { EnhancedPricingCalculator } from '@/utils/enhancedPricingCalculator'
-import { Star, ShoppingCart, Check, Calculator, Info, Upload, Package, Clock, Circle, Square, Shapes } from 'lucide-react'
+import CustomCursor from '@/components/CustomCursor'
 import EnhancedLabelPreview from '@/components/EnhancedLabelPreview'
 
 export default function RollLabelsProductPage() {
@@ -14,642 +14,751 @@ export default function RollLabelsProductPage() {
   const [labelSize, setLabelSize] = useState({ width: '2', length: '2' })
   const [quantity, setQuantity] = useState(100)
   const [calculatedPrice, setCalculatedPrice] = useState<any>(null)
-  const [priceLoading, setPriceLoading] = useState(false)
-  const [addingToCart, setAddingToCart] = useState(false)
-  const [addedToCart, setAddedToCart] = useState(false)
-  const [showPriceBreakdown, setShowPriceBreakdown] = useState(false)
-  const [quantitySuggestions, setQuantitySuggestions] = useState<any[]>([])
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
+  const [step, setStep] = useState(1) // 1: Size/Shape, 2: Material/Finish, 3: Design
 
   const addToCart = useCartStore((state) => state.addToCart)
 
-  // Roll labels specific data
-  const rollLabelsData = {
-    id: 'roll-labels',
-    name: 'Premium Roll Labels',
-    description: 'Premium roll labels perfect for product packaging, branding, and promotional use. Available in various shapes, sizes, and finishes with custom printing options.',
-    rating: 4.8,
-    reviewCount: 127,
-    category: 'Labels & Stickers',
-    basePrice: 35.00,
-    images: ['/images/products/roll-labels-hero.jpg'],
-    specifications: {
-      shapes: [
-        { 
-          id: 'circle', 
-          name: 'Circle', 
-          description: 'Round labels perfect for branding', 
-          priceMultiplier: 1.0,
-          icon: Circle 
-        },
-        { 
-          id: 'square', 
-          name: 'Square', 
-          description: 'Square labels for modern packaging', 
-          priceMultiplier: 1.1,
-          icon: Square 
-        },
-        { 
-          id: 'custom', 
-          name: 'Custom Shape', 
-          description: 'Any custom shape you need', 
-          priceMultiplier: 1.5,
-          icon: Shapes 
-        },
-      ],
-
-      stockOptions: [
-        { 
-          id: 'standard', 
-          name: 'Standard Paper', 
-          description: 'White paper material - cost effective',
-          priceMultiplier: 1.0 
-        },
-        { 
-          id: 'bopp', 
-          name: 'BOPP (Waterproof)', 
-          description: 'Durable plastic material - waterproof',
-          priceMultiplier: 1.4 
-        },
-      ],
-      finishes: [
-        { 
-          id: 'matte', 
-          name: 'Matte Laminate', 
-          description: 'Non-glare matte laminate finish',
-          priceMultiplier: 1.0 
-        },
-        { 
-          id: 'gloss', 
-          name: 'Gloss Laminate', 
-          description: 'High-gloss laminate finish',
-          priceMultiplier: 1.1 
-        },
-      ],
+  // Roll labels shapes and materials
+  const SHAPES = [
+    { 
+      id: 'circle', 
+      name: 'Circle', 
+      description: 'Perfect for branding and logos', 
+      emoji: '⭕',
+      priceMultiplier: 1.0,
+      popular: true
     },
-    quantityPricing: [
-      { min: 100, max: 249, unitPrice: 0.35, savings: 0 },
-      { min: 250, max: 499, unitPrice: 0.28, savings: 20 },
-      { min: 500, max: 999, unitPrice: 0.21, savings: 40 },
-      { min: 1000, max: 2499, unitPrice: 0.14, savings: 60 },
-      { min: 2500, max: 4999, unitPrice: 0.11, savings: 69 },
-      { min: 5000, max: 10000, unitPrice: 0.09, savings: 74 },
-    ],
-  }
+    { 
+      id: 'square', 
+      name: 'Square', 
+      description: 'Modern, clean aesthetic', 
+      emoji: '⬜',
+      priceMultiplier: 1.1,
+      popular: false
+    },
+    { 
+      id: 'custom', 
+      name: 'Custom Shape', 
+      description: 'Any shape you need', 
+      emoji: '🔷',
+      priceMultiplier: 1.3,
+      popular: false
+    }
+  ]
 
-  // Calculate size multiplier based on area
-  const calculateSizeMultiplier = () => {
-    const width = parseFloat(labelSize.width) || 1
-    const length = parseFloat(labelSize.length) || 1
-    const area = width * length
+  const MATERIALS = [
+    {
+      id: 'standard',
+      name: 'Standard Paper',
+      description: 'Great for indoor use and short-term applications',
+      features: ['Cost-effective', 'Easy to write on', 'Good adhesion', 'Eco-friendly'],
+      priceMultiplier: 1.0,
+      popular: true
+    },
+    {
+      id: 'bopp',
+      name: 'BOPP Synthetic',
+      description: 'Waterproof and tear-resistant for professional applications',
+      features: ['Waterproof', 'Tear-resistant', 'Chemical resistant', 'Professional finish'],
+      priceMultiplier: 1.4,
+      popular: false
+    }
+  ]
+
+  const QUANTITY_OPTIONS = [50, 100, 250, 500, 1000, 2500, 5000, 10000]
+
+  // Pricing calculation
+  const calculatePrice = () => {
+    const basePrice = 0.15 // Base price per label
+    const sizeMultiplier = (parseFloat(labelSize.width) * parseFloat(labelSize.length)) / 4
+    const shapeMultiplier = SHAPES.find(s => s.id === selectedShape)?.priceMultiplier || 1
+    const materialMultiplier = MATERIALS.find(m => m.id === selectedStock)?.priceMultiplier || 1
     
-    // Base pricing on area (square inches)
-    if (area <= 1) return 1.0
-    if (area <= 2.25) return 1.25  // 1.5" x 1.5"
-    if (area <= 4) return 1.5      // 2" x 2"
-    if (area <= 6.25) return 1.75  // 2.5" x 2.5"
-    if (area <= 9) return 2.0      // 3" x 3"
-    if (area <= 16) return 2.5     // 4" x 4"
-    return Math.min(3.0, 1 + (area - 1) * 0.15) // Cap at 3x for very large sizes
-  }
+    // Quantity discounts
+    let quantityDiscount = 0
+    if (quantity >= 1000) quantityDiscount = 0.3
+    else if (quantity >= 500) quantityDiscount = 0.2
+    else if (quantity >= 250) quantityDiscount = 0.15
+    else if (quantity >= 100) quantityDiscount = 0.1
 
-  // Calculate pricing based on selections
-  const calculatePricing = async () => {
-    setPriceLoading(true)
-    
-    await new Promise(resolve => setTimeout(resolve, 300))
-    
-    try {
-      const calculatorInputs = {
-        productId: rollLabelsData.id,
-        productType: 'roll-labels',
-        quantity,
-        size: `${labelSize.width}x${labelSize.length}`,
-        width: labelSize.width,
-        length: labelSize.length,
-        shape: selectedShape,
-        paperType: selectedStock,
-        finish: selectedFinish,
-        turnaroundTime: 'standard',
-        shippingZipCode: '11201',
-      }
+    const unitPrice = basePrice * sizeMultiplier * shapeMultiplier * materialMultiplier * (1 - quantityDiscount)
+    const totalPrice = unitPrice * quantity
 
-      const selectedShapeData = rollLabelsData.specifications.shapes.find(s => s.id === selectedShape)
-      const sizeMultiplier = calculateSizeMultiplier()
-      const selectedStockData = rollLabelsData.specifications.stockOptions.find(s => s.id === selectedStock)
-      const selectedFinishData = rollLabelsData.specifications.finishes.find(f => f.id === selectedFinish)
-      
-      const totalMultiplier = (selectedShapeData?.priceMultiplier || 1) * 
-                             sizeMultiplier * 
-                             (selectedStockData?.priceMultiplier || 1) * 
-                             (selectedFinishData?.priceMultiplier || 1)
-
-      const mockProduct = {
-        id: rollLabelsData.id,
-        basePrice: rollLabelsData.basePrice * totalMultiplier,
-        specifications: {
-          sizes: [{ id: 'custom', priceMultiplier: 1 }],
-          paperTypes: [{ id: selectedStock, priceMultiplier: 1 }],
-          finishes: [{ id: selectedFinish, priceMultiplier: 1 }],
-          turnaroundTimes: [{ id: 'standard', priceMultiplier: 1 }],
-        },
-      } as any
-
-      const result = EnhancedPricingCalculator.calculate(calculatorInputs, mockProduct)
-      setCalculatedPrice(result)
-      
-    } catch (error) {
-      console.error('Error calculating pricing:', error)
-    } finally {
-      setPriceLoading(false)
+    return {
+      unitPrice,
+      totalPrice,
+      savings: quantity > 50 ? Math.round((basePrice * sizeMultiplier * shapeMultiplier * materialMultiplier - unitPrice) * quantity) : 0,
+      savingsPercent: Math.round(quantityDiscount * 100)
     }
   }
 
+  const currentPrice = calculatePrice()
+
+  // Reveal animation
   useEffect(() => {
-    calculatePricing()
-  }, [labelSize, selectedShape, selectedStock, selectedFinish, quantity])
-
-  const handleAddToCart = async () => {
-    setAddingToCart(true)
-    
-    try {
-      const cartItem = {
-        productId: rollLabelsData.id,
-        productName: rollLabelsData.name,
-        productDescription: rollLabelsData.description,
-        quantity,
-        unitPrice: calculatedPrice?.unitPrice || 0,
-        specifications: {
-          size: `${labelSize.width}x${labelSize.length}`,
-          shape: selectedShape,
-          width: labelSize.width,
-          length: labelSize.length,
-          paperType: selectedStock,
-          finish: selectedFinish,
-          turnaroundTime: 'standard',
-        },
-        customizations: {
-          uploadedFiles: uploadedFiles.map(file => file.name),
-          specialInstructions: `Size: ${labelSize.width}" W x ${labelSize.length}" L`,
-        },
-        addedAt: new Date(),
-      }
-      
-      addToCart(cartItem)
-      setAddedToCart(true)
-      setTimeout(() => setAddedToCart(false), 3000)
-      
-    } catch (error) {
-      console.error('Error adding to cart:', error)
-    } finally {
-      setAddingToCart(false)
-    }
-  }
-
-
-
-  const getCurrentQuantityTier = () => {
-    return rollLabelsData.quantityPricing.find(tier => quantity >= tier.min && quantity <= tier.max) || rollLabelsData.quantityPricing[0]
-  }
-
-  const currentTier = getCurrentQuantityTier()
-  const selectedShapeData = rollLabelsData.specifications.shapes.find(s => s.id === selectedShape)
-  const selectedStockData = rollLabelsData.specifications.stockOptions.find(s => s.id === selectedStock)
-  const selectedFinishData = rollLabelsData.specifications.finishes.find(f => f.id === selectedFinish)
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry, i) => {
+          if (entry.isIntersecting) {
+            setTimeout(() => entry.target.classList.add('in'), i * 60)
+            observer.unobserve(entry.target)
+          }
+        })
+      },
+      { threshold: 0.08 }
+    )
+    document.querySelectorAll('.rv').forEach((el) => observer.observe(el))
+    return () => observer.disconnect()
+  }, [step])
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Breadcrumb */}
-        <nav className="mb-8">
-          <ol className="flex items-center space-x-2 text-sm text-gray-500">
-            <li><a href="/" className="hover:text-lettuce-green transition-colors">Home</a></li>
-            <li>/</li>
-            <li><a href="/products" className="hover:text-lettuce-green transition-colors">Products</a></li>
-            <li>/</li>
-            <li className="text-gray-900 font-medium">Roll Labels</li>
-          </ol>
-        </nav>
+    <>
+      <CustomCursor />
+      <div className="min-h-screen bg-white text-[#0d0d0d] overflow-x-hidden" style={{fontFamily: '"DM Sans", sans-serif'}}>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          {/* Left Column - Product Images and Info */}
-          <div className="space-y-8">
-            {/* Product Header */}
-            <div className="animate-fade-in">
-              <div className="flex items-center space-x-2 mb-2">
-                <h1 className="text-5xl font-bold text-gray-900">{rollLabelsData.name}</h1>
-                <span className="bg-lettuce-pale text-lettuce-green text-xs font-medium px-3 py-1 rounded-full">
-                  Best Seller
-                </span>
-              </div>
-              
-              <div className="flex items-center space-x-4 mb-4">
-                <div className="flex items-center">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className={`h-5 w-5 ${i < Math.floor(rollLabelsData.rating) ? 'text-lettuce-green fill-current' : 'text-gray-300'}`} />
-                  ))}
-                </div>
-                <span className="text-sm text-gray-600">
-                  {rollLabelsData.rating} ({rollLabelsData.reviewCount} reviews)
-                </span>
-              </div>
-              
-              <p className="text-lg text-gray-600 mb-6">
-                {rollLabelsData.description}
-              </p>
-              
-              <button className="bg-lettuce-pale text-lettuce-green px-6 py-3 rounded-lg font-medium hover:bg-lettuce-green hover:text-white transition-colors">
-                Order Samples
-              </button>
-            </div>
+        {/* Brooklyn Navigation */}
+        <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-10 h-17 bg-white/95 backdrop-blur-sm border-b border-[#ebebeb]">
+          <Link href="/" className="font-bold text-lg text-black no-underline flex items-center gap-2 tracking-tight">
+            🥬 Lettuce Print
+          </Link>
+          <ul className="hidden md:flex gap-8 list-none">
+            <li><Link href="/products" className="text-sm font-medium text-[#666] no-underline hover:text-black transition-colors">Products</Link></li>
+            <li><Link href="/#services" className="text-sm font-medium text-[#666] no-underline hover:text-black transition-colors">Services</Link></li>
+            <li><Link href="/#work" className="text-sm font-medium text-[#666] no-underline hover:text-black transition-colors">Work</Link></li>
+            <li><Link href="/#about" className="text-sm font-medium text-[#666] no-underline hover:text-black transition-colors">About</Link></li>
+            <li><Link href="/#contact" className="text-sm font-medium text-[#666] no-underline hover:text-black transition-colors">Contact</Link></li>
+          </ul>
+          <Link href="/quote" className="bg-black text-white text-xs font-semibold px-6 py-3 rounded-full no-underline hover:bg-[#2e6b38] hover:translate-y-[-1px] transition-all">
+            Get a Free Quote →
+          </Link>
+        </nav>
 
-            {/* Enhanced Interactive Label Preview */}
-            <div className="bg-white rounded-2xl overflow-hidden shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                <span className="bg-gradient-to-r from-lettuce-green to-green-600 bg-clip-text text-transparent">
-                  Professional Label Designer
-                </span>
-                <span className="ml-2 px-2 py-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs rounded-full font-bold">
-                  PRO
-                </span>
-              </h3>
-              <div className="mb-3 text-sm text-gray-600">
-                <div className="flex items-center space-x-4">
-                  <span>🤖 AI Background Removal</span>
-                  <span>✂️ Auto Cutlines</span>
-                  <span>🎨 Professional Tools</span>
-                </div>
-              </div>
-              <EnhancedLabelPreview
-                shape={selectedShape}
-                width={labelSize.width}
-                length={labelSize.length}
-                stock={selectedStock}
-                finish={selectedFinish}
-                onFileUpload={(files) => setUploadedFiles(prev => [...prev, ...files])}
-                onDesignChange={(design) => {
-                  // Store design data for pricing and production
-                  console.log('Design updated:', design)
-                }}
-                className="w-full"
-              />
+        {/* Page Header */}
+        <header className="pt-17 px-10 py-16 border-b border-[#ebebeb]">
+          <div className="rv max-w-4xl">
+            <div className="inline-flex items-center gap-2 bg-[#e6f4e8] text-[#2e6b38] text-xs font-semibold tracking-widest uppercase px-4 py-2 rounded-full mb-5">
+              🏷️ Smart Cutline Generator
             </div>
-
-            {/* Key Features */}
-            <div className="bg-gray-50 rounded-xl p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Key Features</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="flex items-start space-x-3">
-                  <Check className="h-5 w-5 text-lettuce-green mt-0.5" />
-                  <div>
-                    <p className="font-medium text-gray-900">Multiple Shapes</p>
-                    <p className="text-sm text-gray-600">Circle, square, and custom shapes</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <Check className="h-5 w-5 text-green-600 mt-0.5" />
-                  <div>
-                    <p className="font-medium text-gray-900">Premium Materials</p>
-                    <p className="text-sm text-gray-600">Standard paper and waterproof BOPP</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <Check className="h-5 w-5 text-green-600 mt-0.5" />
-                  <div>
-                    <p className="font-medium text-gray-900">Finish Options</p>
-                    <p className="text-sm text-gray-600">Matte and gloss finishes available</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <Check className="h-5 w-5 text-green-600 mt-0.5" />
-                  <div>
-                    <p className="font-medium text-gray-900">Volume Discounts</p>
-                    <p className="text-sm text-gray-600">Save up to 74% with larger quantities</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <h1 className="text-6xl lg:text-7xl leading-[0.92] font-normal tracking-tight mb-6" style={{fontFamily: '"Instrument Serif", serif'}}>
+              Roll Labels<br/>
+              <em className="italic text-[#2e6b38]">made simple.</em>
+            </h1>
+            <p className="text-lg text-[#666] leading-8 max-w-2xl">
+              Professional roll labels with AI-powered design tools. Upload your artwork, get perfect cutlines automatically, 
+              and receive production-ready labels delivered to your door across NYC.
+            </p>
           </div>
+        </header>
 
-          {/* Right Column - Pricing Calculator */}
-          <div className="bg-white border border-gray-200 rounded-2xl p-8 sticky top-8 shadow-lg animate-slide-up">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Pricing Calculator</h2>
-            
-            {/* Shape Selection */}
-            <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 mb-3">Label Shape</label>
-              <div className="grid grid-cols-1 gap-2">
-                {rollLabelsData.specifications.shapes.map((shape) => {
-                  const IconComponent = shape.icon
-                  return (
-                    <label key={shape.id} className="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-all duration-200">
-                      <input
-                        type="radio"
-                        name="shape"
-                        value={shape.id}
-                        checked={selectedShape === shape.id}
-                        onChange={() => setSelectedShape(shape.id as 'circle' | 'square' | 'custom')}
-                        className="text-lettuce-green focus:ring-lettuce-green"
-                      />
-                      <div className="ml-3 flex-1 flex items-center space-x-3">
-                        <IconComponent className="h-4 w-4 text-lettuce-green" />
-                        <div className="flex-1">
-                          <p className="font-medium text-gray-900 text-sm">{shape.name}</p>
-                          <p className="text-xs text-gray-500">{shape.description}</p>
-                        </div>
-                        {shape.priceMultiplier > 1 && (
-                          <div className="text-xs text-gray-600">
-                            +{Math.round((shape.priceMultiplier - 1) * 100)}%
-                          </div>
-                        )}
-                      </div>
-                    </label>
-                  )
-                })}
-              </div>
-            </div>
-
-            {/* Size Selection */}
-            <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 mb-3">Label Size</label>
-              <div className="p-4 border border-gray-200 rounded-lg bg-gray-50">
-                <div className="flex space-x-4">
-                  <div className="flex-1">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Width (inches)</label>
-                    <input
-                      type="number"
-                      value={labelSize.width}
-                      onChange={(e) => setLabelSize({...labelSize, width: e.target.value})}
-                      placeholder="2.0"
-                      min="0.5"
-                      max="12"
-                      step="0.1"
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-lettuce-green focus:border-lettuce-green"
-                    />
-                  </div>
-                  <div className="flex items-end pb-2">
-                    <span className="text-gray-500 text-lg font-medium">×</span>
-                  </div>
-                  <div className="flex-1">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Length (inches)</label>
-                    <input
-                      type="number"
-                      value={labelSize.length}
-                      onChange={(e) => setLabelSize({...labelSize, length: e.target.value})}
-                      placeholder="2.0"
-                      min="0.5"
-                      max="12"
-                      step="0.1"
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-lettuce-green focus:border-lettuce-green"
-                    />
-                  </div>
-                </div>
-                <div className="mt-2 text-center">
-                  <span className="text-xs text-gray-500">
-                    Size: {labelSize.width}" × {labelSize.length}" 
-                    ({(parseFloat(labelSize.width || '0') * parseFloat(labelSize.length || '0')).toFixed(1)} sq in)
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Stock Selection */}
-            <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 mb-3">Stock Material</label>
-              <div className="space-y-2">
-                {rollLabelsData.specifications.stockOptions.map((stock) => (
-                  <label key={stock.id} className="flex items-start p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-all duration-200">
-                    <input
-                      type="radio"
-                      name="stock"
-                      value={stock.id}
-                      checked={selectedStock === stock.id}
-                      onChange={() => setSelectedStock(stock.id as 'standard' | 'bopp')}
-                      className="text-lettuce-green focus:ring-lettuce-green mt-1"
-                    />
-                    <div className="ml-3 flex-1">
-                      <div className="flex justify-between items-start mb-1">
-                        <p className="font-medium text-gray-900 text-sm">{stock.name}</p>
-                        {stock.priceMultiplier > 1 && (
-                          <span className="text-xs text-gray-600">+{Math.round((stock.priceMultiplier - 1) * 100)}%</span>
-                        )}
-                      </div>
-                      <p className="text-xs text-gray-600">{stock.description}</p>
-                    </div>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Finish Selection */}
-            <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 mb-3">Finish</label>
-              <div className="space-y-2">
-                {rollLabelsData.specifications.finishes.map((finish) => (
-                  <label key={finish.id} className="flex items-start p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-all duration-200">
-                    <input
-                      type="radio"
-                      name="finish"
-                      value={finish.id}
-                      checked={selectedFinish === finish.id}
-                      onChange={() => setSelectedFinish(finish.id as 'matte' | 'gloss')}
-                      className="text-lettuce-green focus:ring-lettuce-green mt-1"
-                    />
-                    <div className="ml-3 flex-1">
-                      <div className="flex justify-between items-start mb-1">
-                        <p className="font-medium text-gray-900 text-sm">{finish.name}</p>
-                        {finish.priceMultiplier > 1 && (
-                          <span className="text-xs text-gray-600">+{Math.round((finish.priceMultiplier - 1) * 100)}%</span>
-                        )}
-                      </div>
-                      <p className="text-xs text-gray-600">{finish.description}</p>
-                    </div>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Quantity Selection */}
-            <div className="mb-8">
-              <label className="block text-sm font-semibold text-gray-700 mb-4">Quantity</label>
+        {/* Step 1: Shape & Size Selection */}
+        {step === 1 && (
+          <section className="py-20 px-10">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 max-w-7xl mx-auto">
               
-              {/* Quantity Input */}
-              <div className="flex items-center space-x-4 mb-6">
-                <button
-                  onClick={() => setQuantity(Math.max(100, quantity - 50))}
-                  className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  -
-                </button>
-                <input
-                  type="number"
-                  value={quantity}
-                  onChange={(e) => setQuantity(Math.max(100, parseInt(e.target.value) || 100))}
-                  className="w-24 text-center border border-gray-300 rounded-lg px-3 py-2 font-medium"
-                />
-                <button
-                  onClick={() => setQuantity(quantity + 50)}
-                  className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  +
-                </button>
+              {/* Left Side - Product Showcase */}
+              <div className="rv">
+                <div className="bg-gradient-to-br from-[#a8d4f5] via-[#f5a8c8] to-[#f5e642] rounded-3xl p-12 h-96 flex items-center justify-center relative overflow-hidden">
+                  {/* Label Roll Animation */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="relative">
+                      {/* Roll Core */}
+                      <div className="w-24 h-24 bg-white rounded-full shadow-lg flex items-center justify-center">
+                        <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
+                          <span className="text-2xl">🏷️</span>
+                        </div>
+                      </div>
+                      
+                      {/* Unrolled Labels */}
+                      <div className="absolute -right-8 top-1/2 transform -translate-y-1/2 flex space-x-2">
+                        <div className="w-12 h-12 bg-[#2e6b38] rounded-full shadow-lg animate-bounce [animation-delay:0s] flex items-center justify-center">
+                          <span className="text-white text-xs font-bold">🥬</span>
+                        </div>
+                        <div className="w-12 h-12 bg-white rounded-lg shadow-lg animate-bounce [animation-delay:0.2s] flex items-center justify-center">
+                          <span className="text-[#2e6b38] text-xs font-bold">NYC</span>
+                        </div>
+                        <div className="w-12 h-12 bg-[#f5e642] rounded-full shadow-lg animate-bounce [animation-delay:0.4s] flex items-center justify-center">
+                          <span className="text-black text-xs">★</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Features */}
+                <div className="mt-12 grid grid-cols-3 gap-8 text-center">
+                  <div>
+                    <div className="w-12 h-12 bg-[#e6f4e8] text-[#2e6b38] rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
+                      🤖
+                    </div>
+                    <h3 className="font-semibold text-black mb-2" style={{fontFamily: '"Instrument Serif", serif'}}>Smart Cutlines</h3>
+                    <p className="text-sm text-[#666]">AI generates perfect die-cut lines automatically</p>
+                  </div>
+                  <div>
+                    <div className="w-12 h-12 bg-[#e6f4e8] text-[#2e6b38] rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
+                      💧
+                    </div>
+                    <h3 className="font-semibold text-black mb-2" style={{fontFamily: '"Instrument Serif", serif'}}>Waterproof Options</h3>
+                    <p className="text-sm text-[#666]">BOPP synthetic materials for demanding environments</p>
+                  </div>
+                  <div>
+                    <div className="w-12 h-12 bg-[#e6f4e8] text-[#2e6b38] rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
+                      📦
+                    </div>
+                    <h3 className="font-semibold text-black mb-2" style={{fontFamily: '"Instrument Serif", serif'}}>Roll Format</h3>
+                    <p className="text-sm text-[#666]">Easy dispensing for high-volume applications</p>
+                  </div>
+                </div>
               </div>
 
-              {/* Quantity Tiers */}
-              <div className="space-y-2">
-                {rollLabelsData.quantityPricing.map((tier, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setQuantity(tier.min)}
-                    className={`w-full p-3 rounded-lg border text-left transition-all duration-200 hover:shadow-sm ${
-                      quantity >= tier.min && quantity <= tier.max
-                        ? 'border-lettuce-green bg-lettuce-pale'
-                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                    }`}
+              {/* Right Side - Configuration */}
+              <div className="rv">
+                <div className="bg-white border border-[#ebebeb] rounded-3xl p-8 shadow-sm">
+                  
+                  {/* Shape Selection */}
+                  <div className="mb-8">
+                    <h3 className="text-2xl font-normal text-black mb-6" style={{fontFamily: '"Instrument Serif", serif'}}>
+                      Choose your shape
+                    </h3>
+                    
+                    <div className="space-y-3">
+                      {SHAPES.map((shape) => (
+                        <label key={shape.id} className="block cursor-none">
+                          <input
+                            type="radio"
+                            name="shape"
+                            value={shape.id}
+                            checked={selectedShape === shape.id}
+                            onChange={(e) => setSelectedShape(e.target.value as any)}
+                            className="sr-only"
+                          />
+                          <div className={`p-4 rounded-2xl border-2 transition-all hover:translate-y-[-2px] ${
+                            selectedShape === shape.id
+                              ? 'border-[#2e6b38] bg-[#e6f4e8]'
+                              : 'border-[#ebebeb] hover:border-[#2e6b38]'
+                          }`}>
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center space-x-4">
+                                <span className="text-2xl">{shape.emoji}</span>
+                                <div>
+                                  <div className="font-medium text-lg">{shape.name}</div>
+                                  <div className="text-sm text-[#666]">
+                      ${currentPrice.unitPrice.toFixed(3)} per label
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* AI Label Designer */}
+              <div className="rv bg-white border border-[#ebebeb] rounded-3xl p-8 shadow-sm">
+                <div className="mb-6 text-center">
+                  <div className="inline-flex items-center gap-3 bg-gradient-to-r from-[#2e6b38] to-[#3dba52] text-white text-sm font-bold tracking-wide uppercase px-6 py-3 rounded-full mb-4">
+                    <span className="text-lg">🎨</span>
+                    AI-Powered Label Designer
+                    <span className="text-lg">✨</span>
+                  </div>
+                </div>
+
+                <EnhancedLabelPreview
+                  shape={selectedShape}
+                  width={parseFloat(labelSize.width)}
+                  length={selectedShape === 'circle' ? parseFloat(labelSize.width) : parseFloat(labelSize.length)}
+                  stock={selectedStock}
+                  finish={selectedFinish}
+                  onFileUpload={(files) => {
+                    console.log('Files uploaded for label design:', files)
+                  }}
+                  onDesignChange={(design) => {
+                    console.log('Label design updated:', design)
+                  }}
+                  className="w-full"
+                />
+
+                {/* Action Buttons */}
+                <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center">
+                  <button 
+                    onClick={() => {
+                      const product = {
+                        id: 'roll-labels-custom',
+                        name: `Custom Roll Labels - ${selectedShape === 'circle' ? labelSize.width + '"' : labelSize.width + '" × ' + labelSize.length + '"'}`,
+                        price: currentPrice.totalPrice,
+                        quantity: 1,
+                        image: '/images/roll-labels-preview.jpg',
+                        specifications: {
+                          shape: selectedShape,
+                          size: selectedShape === 'circle' ? labelSize.width + '"' : labelSize.width + '" × ' + labelSize.length + '"',
+                          quantity: quantity,
+                          material: selectedStock,
+                          finish: selectedFinish
+                        }
+                      }
+                      addToCart(product)
+                    }}
+                    className="bg-[#2e6b38] hover:bg-[#1f4526] text-white px-12 py-5 rounded-2xl text-lg font-semibold hover:translate-y-[-2px] transition-all flex items-center justify-center space-x-3 shadow-lg"
                   >
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <p className="font-medium text-gray-900">
-                          {tier.min === tier.max ? tier.min : `${tier.min}-${tier.max}`} labels
-                        </p>
-                        <p className="text-sm text-gray-600">${tier.unitPrice.toFixed(2)} per label</p>
+                    <span className="text-xl">🛒</span>
+                    <span>Add to Cart - ${currentPrice.totalPrice.toFixed(0)}</span>
+                  </button>
+                  
+                  <button className="bg-white text-[#2e6b38] border-2 border-[#2e6b38] px-12 py-5 rounded-2xl text-lg font-semibold hover:bg-[#e6f4e8] hover:translate-y-[-2px] transition-all flex items-center justify-center space-x-3">
+                    <span className="text-xl">💾</span>
+                    <span>Save Design</span>
+                  </button>
+                </div>
+
+                {/* Final Summary */}
+                <div className="mt-12 p-8 bg-[#faf8f4] rounded-2xl">
+                  <h3 className="text-2xl font-normal text-black mb-6" style={{fontFamily: '"Instrument Serif", serif'}}>Final Order Details</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+                    <div>
+                      <div className="text-sm text-[#666] mb-1">Shape</div>
+                      <div className="font-semibold text-lg capitalize">{SHAPES.find(s => s.id === selectedShape)?.name}</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-[#666] mb-1">Size</div>
+                      <div className="font-semibold text-lg">
+                        {selectedShape === 'circle' ? labelSize.width + '"' : labelSize.width + '" × ' + labelSize.length + '"'}
                       </div>
-                      {tier.savings > 0 && (
-                        <div className="text-right">
-                          <p className="text-sm font-medium text-lettuce-green">Save {tier.savings}%</p>
+                    </div>
+                    <div>
+                      <div className="text-sm text-[#666] mb-1">Quantity</div>
+                      <div className="font-semibold text-lg">{quantity.toLocaleString()}</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-[#666] mb-1">Material</div>
+                      <div className="font-semibold text-lg">{MATERIALS.find(m => m.id === selectedStock)?.name}</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-[#666] mb-1">Turnaround</div>
+                      <div className="font-semibold text-lg text-[#2e6b38]">3-5 business days</div>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-6 pt-6 border-t border-[#ebebeb] flex items-center justify-between">
+                    <div className="flex items-center space-x-8 text-sm text-[#666]">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-lg">🚚</span>
+                        <span>Roll format for easy dispensing</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-lg">🛡️</span>
+                        <span>Quality guaranteed</span>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold text-[#2e6b38]" style={{fontFamily: '"Instrument Serif", serif'}}>
+                        Total: ${currentPrice.totalPrice.toFixed(0)}
+                      </div>
+                      {currentPrice.savings > 0 && (
+                        <div className="text-sm text-[#2e6b38] font-semibold">
+                          You saved ${currentPrice.savings}!
                         </div>
                       )}
                     </div>
-                  </button>
-                ))}
+                  </div>
+                </div>
               </div>
             </div>
+          </section>
+        )}
 
-            {/* Price Display */}
-            <div className="mb-8 p-6 bg-gray-50 rounded-xl relative">
-              {priceLoading && (
-                <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center rounded-xl">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-lettuce-green"></div>
-                </div>
-              )}
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Total Price</p>
-                  <div className="flex items-baseline space-x-2">
-                    <p className="text-3xl font-bold text-gray-900 transition-all duration-300">
-                      ${calculatedPrice?.finalTotal.toFixed(2) || '0.00'}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      ${calculatedPrice?.unitPrice.toFixed(3) || '0.000'} per label
-                    </p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setShowPriceBreakdown(!showPriceBreakdown)}
-                  className="flex items-center space-x-2 text-lettuce-green hover:text-lettuce-dark"
-                >
-                  <Calculator className="h-4 w-4" />
-                  <span className="text-sm">Details</span>
-                </button>
-              </div>
-
-              {/* Price Breakdown */}
-              {showPriceBreakdown && calculatedPrice && (
-                <div className="border-t pt-4 space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>Labels:</span>
-                    <span>${calculatedPrice.totalPrice.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>Shipping:</span>
-                    <span>${calculatedPrice.shippingCost.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span>Tax:</span>
-                    <span>${calculatedPrice.taxAmount.toFixed(2)}</span>
-                  </div>
-                  {calculatedPrice.volumeDiscount > 0 && (
-                    <div className="flex justify-between text-sm text-lettuce-green">
-                      <span>Volume Discount:</span>
-                      <span>-${calculatedPrice.volumeDiscount.toFixed(2)}</span>
-                    </div>
-                  )}
-                  <div className="border-t pt-2 flex justify-between font-semibold">
-                    <span>Total:</span>
-                    <span>${calculatedPrice.finalTotal.toFixed(2)}</span>
-                  </div>
-                </div>
-              )}
-
-              {/* Current Savings */}
-              {currentTier.savings > 0 && (
-                <div className="mt-4 p-3 bg-lettuce-pale rounded-lg">
-                  <div className="flex items-center space-x-2">
-                    <Info className="h-4 w-4 text-lettuce-green" />
-                    <span className="text-lettuce-dark font-medium text-sm">
-                      You're saving {currentTier.savings}% with this quantity!
-                    </span>
-                  </div>
-                </div>
-              )}
+        {/* Brooklyn Footer */}
+        <footer className="bg-black text-[#888] py-18 px-10">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-14">
+            <div>
+              <Link href="/" className="text-white font-bold text-xl no-underline flex items-center gap-2 mb-4">
+                🥬 Lettuce Print
+              </Link>
+              <p className="text-sm leading-7 max-w-70 mb-6">
+                Brooklyn's print shop and graphic design studio. Serving businesses, restaurants, and brands across all five NYC boroughs.
+              </p>
             </div>
-
-            {/* Delivery Info */}
-            {calculatedPrice && (
-              <div className="mb-8 p-4 bg-lettuce-pale rounded-lg">
-                <div className="flex items-center space-x-2 mb-2">
-                  <Clock className="h-4 w-4 text-lettuce-green" />
-                  <span className="text-sm font-medium text-lettuce-dark">Estimated Delivery</span>
-                </div>
-                <p className="text-sm text-lettuce-dark">
-                  {calculatedPrice.deliveryInfo.estimatedDelivery}
-                </p>
-                <p className="text-xs text-lettuce-green mt-1">
-                  Production: {calculatedPrice.deliveryInfo.productionTime} days + 
-                  Shipping: {calculatedPrice.deliveryInfo.shippingTime} days
-                </p>
-              </div>
-            )}
-
-            {/* Add to Cart Button */}
-            <button
-              onClick={handleAddToCart}
-              disabled={addingToCart || addedToCart}
-              className={`w-full py-4 px-6 rounded-xl font-semibold text-white transition-colors flex items-center justify-center space-x-2 ${
-                addedToCart
-                  ? 'bg-lettuce-green hover:bg-lettuce-dark'
-                  : 'bg-lettuce-green hover:bg-lettuce-dark'
-              } disabled:opacity-50 disabled:cursor-not-allowed`}
-            >
-              {addingToCart ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                  <span>Adding to Cart...</span>
-                </>
-              ) : addedToCart ? (
-                <>
-                  <Check className="h-5 w-5" />
-                  <span>Added to Cart!</span>
-                </>
-              ) : (
-                <>
-                  <ShoppingCart className="h-5 w-5" />
-                  <span>Add to Cart - ${calculatedPrice?.finalTotal.toFixed(2)}</span>
-                </>
-              )}
-            </button>
-
-            {/* Next Step */}
-            <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600 mb-2">Next step: Upload your artwork</p>
-              <div className="flex items-center justify-center space-x-2 text-lettuce-green">
-                <Upload className="h-4 w-4" />
-                <span className="text-sm font-medium">Upload Artwork →</span>
-              </div>
+            
+            <div>
+              <div className="text-xs font-semibold tracking-widest uppercase text-[#555] mb-4">Products</div>
+              <ul className="list-none space-y-3">
+                <li><Link href="/products/die-cut-stickers" className="text-sm text-[#444] no-underline hover:text-white transition-colors">Die-Cut Stickers</Link></li>
+                <li><Link href="/products/roll-labels" className="text-sm text-[#444] no-underline hover:text-white transition-colors">Roll Labels</Link></li>
+                <li><Link href="/products/business-cards" className="text-sm text-[#444] no-underline hover:text-white transition-colors">Business Cards</Link></li>
+                <li><Link href="/products/banners" className="text-sm text-[#444] no-underline hover:text-white transition-colors">Banners & Signs</Link></li>
+              </ul>
+            </div>
+            
+            <div>
+              <div className="text-xs font-semibold tracking-widest uppercase text-[#555] mb-4">Company</div>
+              <ul className="list-none space-y-3">
+                <li><Link href="/about" className="text-sm text-[#444] no-underline hover:text-white transition-colors">About Us</Link></li>
+                <li><Link href="/products" className="text-sm text-[#444] no-underline hover:text-white transition-colors">All Products</Link></li>
+                <li><Link href="/quote" className="text-sm text-[#444] no-underline hover:text-white transition-colors">Get Quote</Link></li>
+              </ul>
+            </div>
+            
+            <div>
+              <div className="text-xs font-semibold tracking-widest uppercase text-[#555] mb-4">Brooklyn Studio</div>
+              <ul className="list-none space-y-3">
+                <li><span className="text-sm text-[#444]">361 Stagg St</span></li>
+                <li><span className="text-sm text-[#444]">Brooklyn, NY 11206</span></li>
+                <li><span className="text-sm text-[#444]">Mon–Fri: 9am–6pm</span></li>
+                <li><span className="text-sm text-[#444]">🚗 Uber Delivery Available</span></li>
+              </ul>
             </div>
           </div>
-        </div>
+          
+          <div className="flex flex-col md:flex-row justify-between items-center pt-7 border-t border-[#1a1a1a] gap-3">
+            <span className="text-xs text-[#333]">
+              © 2025 Lettuce Print · Brooklyn's AI-Powered Print Shop
+            </span>
+            <div className="flex gap-6">
+              <a href="tel:3476030557" className="text-xs text-[#444] no-underline flex items-center gap-2 hover:text-[#3dba52] transition-colors">
+                <span className="text-[#3dba52]">☎</span> (347) 603-0557
+              </a>
+              <a href="mailto:info@lettuceprint.com" className="text-xs text-[#444] no-underline flex items-center gap-2 hover:text-[#3dba52] transition-colors">
+                <span className="text-[#3dba52]">✉</span> info@lettuceprint.com
+              </a>
+            </div>
+          </div>
+        </footer>
       </div>
-    </div>
+    </>
   )
-}
+}666]">{shape.description}</div>
+                                </div>
+                              </div>
+                              {shape.popular && (
+                                <span className="text-xs bg-[#2e6b38] text-white px-3 py-1 rounded-full font-semibold">
+                                  Popular
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Size Selection */}
+                  <div className="mb-8">
+                    <h3 className="text-2xl font-normal text-black mb-6" style={{fontFamily: '"Instrument Serif", serif'}}>
+                      Label dimensions
+                    </h3>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-black mb-2">
+                          Width (inches)
+                        </label>
+                        <select
+                          value={labelSize.width}
+                          onChange={(e) => setLabelSize(prev => ({ ...prev, width: e.target.value }))}
+                          className="w-full p-3 border-2 border-[#ebebeb] rounded-xl focus:border-[#2e6b38] outline-none transition-colors"
+                        >
+                          <option value="1">1"</option>
+                          <option value="1.5">1.5"</option>
+                          <option value="2">2"</option>
+                          <option value="2.5">2.5"</option>
+                          <option value="3">3"</option>
+                          <option value="4">4"</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-black mb-2">
+                          {selectedShape === 'circle' ? 'Height (same as width)' : 'Height (inches)'}
+                        </label>
+                        {selectedShape === 'circle' ? (
+                          <input
+                            type="text"
+                            value={`${labelSize.width}" (circle)`}
+                            disabled
+                            className="w-full p-3 border-2 border-[#ebebeb] rounded-xl bg-gray-50 text-[#666]"
+                          />
+                        ) : (
+                          <select
+                            value={labelSize.length}
+                            onChange={(e) => setLabelSize(prev => ({ ...prev, length: e.target.value }))}
+                            className="w-full p-3 border-2 border-[#ebebeb] rounded-xl focus:border-[#2e6b38] outline-none transition-colors"
+                          >
+                            <option value="1">1"</option>
+                            <option value="1.5">1.5"</option>
+                            <option value="2">2"</option>
+                            <option value="2.5">2.5"</option>
+                            <option value="3">3"</option>
+                            <option value="4">4"</option>
+                          </select>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Quantity Selection */}
+                  <div className="mb-8">
+                    <h3 className="text-2xl font-normal text-black mb-6" style={{fontFamily: '"Instrument Serif", serif'}}>
+                      How many labels?
+                    </h3>
+                    
+                    <div className="grid grid-cols-2 gap-3">
+                      {QUANTITY_OPTIONS.map((qty) => (
+                        <label key={qty} className="block cursor-none">
+                          <input
+                            type="radio"
+                            name="quantity"
+                            value={qty}
+                            checked={quantity === qty}
+                            onChange={() => setQuantity(qty)}
+                            className="sr-only"
+                          />
+                          <div className={`p-4 rounded-2xl border-2 text-center transition-all hover:translate-y-[-2px] ${
+                            quantity === qty
+                              ? 'border-[#2e6b38] bg-[#e6f4e8]'
+                              : 'border-[#ebebeb] hover:border-[#2e6b38]'
+                          }`}>
+                            <div className="font-semibold text-lg">{qty.toLocaleString()}</div>
+                            <div className="text-sm font-bold text-[#2e6b38]">
+                              ${(calculatePrice().totalPrice / 100 * qty).toFixed(0)}
+                            </div>
+                            {qty >= 500 && (
+                              <div className="text-xs text-[#2e6b38] mt-1">
+                                Volume discount
+                              </div>
+                            )}
+                          </div>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Pricing */}
+                  <div className="mb-8 p-6 bg-[#faf8f4] rounded-2xl">
+                    <div className="flex items-baseline justify-between mb-2">
+                      <span className="text-4xl font-bold text-black" style={{fontFamily: '"Instrument Serif", serif'}}>
+                        ${currentPrice.totalPrice.toFixed(0)}
+                      </span>
+                      <span className="text-[#666]">
+                        ${currentPrice.unitPrice.toFixed(3)} each
+                      </span>
+                    </div>
+                    {currentPrice.savings > 0 && (
+                      <div className="text-[#2e6b38] font-semibold">
+                        You save ${currentPrice.savings} ({currentPrice.savingsPercent}% off)
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Continue */}
+                  <button 
+                    onClick={() => setStep(2)}
+                    className="w-full bg-[#2e6b38] hover:bg-[#1f4526] text-white font-semibold py-5 px-8 rounded-2xl transition-all hover:translate-y-[-2px] text-lg"
+                  >
+                    Choose Material & Finish →
+                  </button>
+
+                  <div className="mt-4 text-center text-sm text-[#666]">
+                    {selectedShape === 'circle' ? labelSize.width : labelSize.width + '" × ' + labelSize.length}"} × {quantity.toLocaleString()} labels
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Step 2: Material & Finish */}
+        {step === 2 && (
+          <section className="py-20 px-10">
+            <div className="max-w-6xl mx-auto">
+              
+              {/* Back Button & Header */}
+              <div className="rv mb-12">
+                <button 
+                  onClick={() => setStep(1)}
+                  className="text-[#2e6b38] hover:text-[#1f4526] text-sm mb-4 flex items-center font-medium"
+                >
+                  ← Back to shape & size
+                </button>
+                <h2 className="text-5xl font-normal text-black mb-4" style={{fontFamily: '"Instrument Serif", serif'}}>
+                  Choose your <em className="italic text-[#2e6b38]">material.</em>
+                </h2>
+                <p className="text-lg text-[#666]">
+                  {selectedShape === 'circle' ? labelSize.width + '"' : labelSize.width + '" × ' + labelSize.length + '"'} × {quantity.toLocaleString()} labels
+                </p>
+              </div>
+
+              {/* Materials Grid */}
+              <div className="rv grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+                {MATERIALS.map((material) => (
+                  <div
+                    key={material.id}
+                    onClick={() => setSelectedStock(material.id as any)}
+                    className={`p-8 rounded-3xl border-2 cursor-none transition-all hover:translate-y-[-4px] ${
+                      selectedStock === material.id
+                        ? 'border-[#2e6b38] bg-[#e6f4e8]'
+                        : 'border-[#ebebeb] hover:border-[#2e6b38]'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div>
+                        <h4 className="text-2xl font-normal text-black mb-2 flex items-center" style={{fontFamily: '"Instrument Serif", serif'}}>
+                          {material.name}
+                          {material.popular && (
+                            <span className="ml-3 text-xs bg-[#2e6b38] text-white px-3 py-1 rounded-full font-semibold">
+                              Popular
+                            </span>
+                          )}
+                        </h4>
+                        <p className="text-[#666] mb-4">{material.description}</p>
+                      </div>
+                      {selectedStock === material.id && (
+                        <div className="w-6 h-6 bg-[#2e6b38] text-white rounded-full flex items-center justify-center text-sm">
+                          ✓
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {material.features.map((feature, index) => (
+                        <span key={index} className="text-xs bg-white text-[#666] px-3 py-1 rounded-full border border-[#ebebeb]">
+                          {feature}
+                        </span>
+                      ))}
+                    </div>
+                    
+                    <div className="text-sm font-semibold">
+                      {material.priceMultiplier === 1 ? (
+                        <span className="text-black">Standard pricing</span>
+                      ) : (
+                        <span className="text-[#f5a86e]">
+                          +{Math.round((material.priceMultiplier - 1) * 100)}% premium
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Finish Selection */}
+              <div className="rv mb-12">
+                <h3 className="text-3xl font-normal text-black mb-8" style={{fontFamily: '"Instrument Serif", serif'}}>
+                  Choose finish
+                </h3>
+                
+                <div className="grid grid-cols-2 gap-6 max-w-2xl">
+                  {(['matte', 'gloss'] as const).map((finish) => (
+                    <div
+                      key={finish}
+                      onClick={() => setSelectedFinish(finish)}
+                      className={`p-6 rounded-2xl border-2 cursor-none transition-all hover:translate-y-[-2px] ${
+                        selectedFinish === finish
+                          ? 'border-[#2e6b38] bg-[#e6f4e8]'
+                          : 'border-[#ebebeb] hover:border-[#2e6b38]'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-semibold text-lg capitalize">{finish}</span>
+                        {selectedFinish === finish && (
+                          <div className="w-5 h-5 bg-[#2e6b38] text-white rounded-full flex items-center justify-center text-sm">
+                            ✓
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Summary & Continue */}
+              <div className="rv bg-white border border-[#ebebeb] rounded-3xl p-8 max-w-2xl mx-auto">
+                <h3 className="text-2xl font-normal text-black mb-6" style={{fontFamily: '"Instrument Serif", serif'}}>
+                  Order Summary
+                </h3>
+                
+                <div className="space-y-4 mb-8">
+                  <div className="flex justify-between">
+                    <span className="text-[#666]">Shape:</span>
+                    <span className="font-medium capitalize">{SHAPES.find(s => s.id === selectedShape)?.name}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-[#666]">Size:</span>
+                    <span className="font-medium">
+                      {selectedShape === 'circle' ? labelSize.width + '"' : labelSize.width + '" × ' + labelSize.length + '"'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-[#666]">Quantity:</span>
+                    <span className="font-medium">{quantity.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-[#666]">Material:</span>
+                    <span className="font-medium">{MATERIALS.find(m => m.id === selectedStock)?.name}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-[#666]">Finish:</span>
+                    <span className="font-medium capitalize">{selectedFinish}</span>
+                  </div>
+                </div>
+
+                <div className="border-t border-[#ebebeb] pt-6 mb-8">
+                  <div className="flex items-baseline justify-between">
+                    <span className="text-3xl font-bold text-black" style={{fontFamily: '"Instrument Serif", serif'}}>
+                      ${currentPrice.totalPrice.toFixed(0)}
+                    </span>
+                    <span className="text-[#666]">
+                      ${currentPrice.unitPrice.toFixed(3)} each
+                    </span>
+                  </div>
+                  {currentPrice.savings > 0 && (
+                    <div className="text-[#2e6b38] font-semibold mt-2">
+                      You save ${currentPrice.savings} ({currentPrice.savingsPercent}% off)
+                    </div>
+                  )}
+                </div>
+
+                <button 
+                  onClick={() => setStep(3)}
+                  className="w-full bg-[#2e6b38] hover:bg-[#1f4526] text-white font-semibold py-5 px-8 rounded-2xl transition-all hover:translate-y-[-2px] text-lg"
+                >
+                  Design Your Labels →
+                </button>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Step 3: Label Designer */}
+        {step === 3 && (
+          <section className="py-20 px-10">
+            <div className="max-w-7xl mx-auto">
+              
+              {/* Header */}
+              <div className="rv mb-12">
+                <button 
+                  onClick={() => setStep(2)}
+                  className="text-[#2e6b38] hover:text-[#1f4526] text-sm mb-4 flex items-center font-medium"
+                >
+                  ← Back to materials
+                </button>
+                <h2 className="text-5xl lg:text-6xl font-normal text-black mb-4" style={{fontFamily: '"Instrument Serif", serif'}}>
+                  Design your <em className="italic text-[#2e6b38]">perfect labels.</em>
+                </h2>
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                  <div>
+                    <p className="text-lg text-[#666] mb-4">
+                      {selectedShape === 'circle' ? labelSize.width + '"' : labelSize.width + '" × ' + labelSize.length + '"'} × {quantity.toLocaleString()} {MATERIALS.find(m => m.id === selectedStock)?.name} labels
+                    </p>
+                    <div className="flex items-center space-x-6 text-sm text-[#666]">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-[#2e6b38] rounded-full"></div>
+                        <span>🤖 Smart Cutlines</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-[#3dba52] rounded-full"></div>
+                        <span>🎨 Real-time Preview</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-[#f5e642] rounded-full"></div>
+                        <span>📁 Production Files</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="text-right">
+                    <div className="text-3xl font-bold text-black" style={{fontFamily: '"Instrument Serif", serif'}}>
+                      ${currentPrice.totalPrice.toFixed(0)}
+                    </div>
+                    <div className="text-sm text-[

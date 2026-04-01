@@ -1,6 +1,119 @@
+/* Import the Brooklyn design fonts */
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=DM+Mono:wght@400;500&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Brooklyn Design System Animations */
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scrollLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Reveal Animation */
+.rv {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+
+.rv.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Custom scrollbar hiding */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Cursor customization */
+body {
+  cursor: none;
+}
+
+a, button, input, textarea, select {
+  cursor: none;
+}
+
+/* Brooklyn specific utility classes */
+.max-w-70 {
+  max-width: 17.5rem;
+}
+
+.max-w-78 {
+  max-width: 19.5rem;
+}
+
+.max-w-85 {
+  max-width: 21.25rem;
+}
+
+.w-70 {
+  width: 17.5rem;
+}
+
+.w-78 {
+  width: 19.5rem;
+}
+
+.h-50 {
+  height: 12.5rem;
+}
+
+.w-13 {
+  width: 3.25rem;
+}
+
+.h-13 {
+  height: 3.25rem;
+}
+
+.h-17 {
+  height: 4.25rem;
+}
+
+.pt-17 {
+  padding-top: 4.25rem;
+}
+
+.py-18 {
+  padding-top: 4.5rem;
+  padding-bottom: 4.5rem;
+}
+
+.py-22 {
+  padding-top: 5.5rem;
+  padding-bottom: 5.5rem;
+}
+
+.py-25 {
+  padding-top: 6.25rem;
+  padding-bottom: 6.25rem;
+}
+
+.min-w-10 {
+  min-width: 2.5rem;
+}
 
 :root {
   --foreground-rgb: 23, 23, 23;
@@ -12,6 +125,16 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 html,
