@@ -88,12 +88,12 @@ export default function Home() {
               </h1>
             </div>
             <div className="rv w-full h-80 rounded-3xl overflow-hidden relative flex-shrink-0">
-              <Image 
-                src="https://static.wixstatic.com/media/8523d8_6900d002afda441fa1d018899be4b268~mv2.jpg/v1/crop/x_323,y_0,w_3594,h_2832/fill/w_302,h_238,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Vinyl.jpg"
-                alt="Lettuce Print Brooklyn studio"
-                fill
-                className="object-cover"
-              />
+              <div className="w-full h-full bg-gradient-to-br from-[#f5e642] via-[#f5a8c8] to-[#a8d4f5] flex items-center justify-center">
+                <div className="text-center">
+                  <span className="text-6xl mb-4 block">🎨</span>
+                  <div className="text-black font-semibold">Brooklyn Print Studio</div>
+                </div>
+              </div>
               <div className="absolute bottom-4 left-4 bg-[#f5e642] text-black text-xs font-bold tracking-wider uppercase px-4 py-2 rounded-full">
                 📍 361 Stagg St, Brooklyn
               </div>
@@ -104,7 +104,7 @@ export default function Home() {
           <div className="rv flex gap-4 px-10 pt-7 items-start flex-nowrap">
             <div className="rounded-lg flex-shrink-0 relative overflow-hidden flex items-center justify-center bg-[#f5a8c8] flex-1 min-w-[180px] h-40">
               <Image 
-                src="https://static.wixstatic.com/media/8523d8_c2b844fe8e72457faba4ed5feff8902e~mv2.jpg/v1/crop/x_604,y_386,w_1092,h_860/fill/w_302,h_238,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/dabPal_posterMock.jpg"
+                src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAyIiBoZWlnaHQ9IjIzOCIgdmlld0JveD0iMCAwIDMwMiAyMzgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkMSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6I2Y1YThjODtzdG9wLW9wYWNpdHk6MSIgLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiNhOGQ0ZjU7c3RvcC1vcGFjaXR5OjEiIC8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmFkMSkiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1zaXplPSI0MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiPvCfkYQ8L3RleHQ+PC9zdmc+"
                 alt="Graphic design work"
                 fill
                 className="object-cover"
@@ -116,7 +116,7 @@ export default function Home() {
             
             <div className="rounded-lg flex-shrink-0 relative overflow-hidden flex items-center justify-center bg-[#3dba52] flex-[1.3] min-w-[220px] h-40">
               <Image 
-                src="https://static.wixstatic.com/media/8523d8_7e2af34100b34fa6b7888e7e766d25ca~mv2.jpg/v1/fill/w_600,h_482,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Full-Service-Lettuce-Print-Banner-Mockup.jpg"
+                src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjQ4MiIgdmlld0JveD0iMCAwIDYwMCA0ODIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkMiIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6I2Y1ZTY0MjtzdG9wLW9wYWNpdHk6MSIgLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMyZTZiMzg7c3RvcC1vcGFjaXR5OjEiIC8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmFkMikiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1zaXplPSI0OCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiIGZpbGw9IndoaXRlIj7wn42qPC90ZXh0Pjwvc3ZnPg=="
                 alt="Custom vinyl banner printing"
                 fill
                 className="object-cover"
@@ -131,7 +131,7 @@ export default function Home() {
 
             <div className="rounded-lg flex-shrink-0 relative overflow-hidden flex items-center justify-center bg-[#f5e642] flex-[1.1] min-w-[190px] h-40">
               <Image 
-                src="https://static.wixstatic.com/media/8523d8_39ab6ee0e5924ac59265eccee6236967~mv2.jpg/v1/crop/x_0,y_740,w_3024,h_2552/fill/w_302,h_238,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Flyers_JPG.jpg"
+                src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAyIiBoZWlnaHQ9IjIzOCIgdmlld0JveD0iMCAwIDMwMiAyMzgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkMyIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6Izg2NWUzYztzdG9wLW9wYWNpdHk6MSIgLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiNmNWU2NDI7c3RvcC1vcGFjaXR5OjEiIC8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmFkMykiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1zaXplPSI0MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiIGZpbGw9IndoaXRlIj7wn5K8PC90ZXh0Pjwvc3ZnPg=="
                 alt="Flyer and postcard printing"
                 fill
                 className="object-cover"
@@ -143,7 +143,7 @@ export default function Home() {
 
             <div className="rounded-lg flex-shrink-0 relative overflow-hidden flex items-center justify-center bg-[#8b5e3c] flex-1 min-w-[180px] h-40">
               <Image 
-                src="https://static.wixstatic.com/media/8523d8_2cf0196a4b64446cad7340d211666662~mv2.jpg/v1/fill/w_587,h_587,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/8523d8_2cf0196a4b64446cad7340d211666662~mv2.jpg"
+                src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTg3IiBoZWlnaHQ9IjU4NyIgdmlld0JveD0iMCAwIDU4NyA1ODciIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkNCIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzJlNmIzODtzdG9wLW9wYWNpdHk6MSIgLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiNmNWU2NDI7c3RvcC1vcGFjaXR5OjEiIC8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmFkNCkiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1zaXplPSI2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiIGZpbGw9IndoaXRlIj7wn5GuPC90ZXh0Pjwvc3ZnPg=="
                 alt="Custom roll labels"
                 fill
                 className="object-cover"
