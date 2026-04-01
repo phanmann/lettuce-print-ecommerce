@@ -138,15 +138,15 @@ const CUTTING_OPTIONS = [
   {
     id: 'die-cut',
     name: 'Die-Cut',
-    description: 'Cut completely through, individual stickers',
+    description: 'Cut completely through, individual stickers ready to peel',
     icon: '✂️',
-    features: ['Individual stickers', 'Easy to peel', 'Professional finish', 'Any shape'],
+    features: ['Individual stickers', 'Easy to peel', 'Professional finish', 'Custom shapes'],
     recommended: true
   },
   {
     id: 'kiss-cut',
     name: 'Kiss-Cut',
-    description: 'Cut through sticker only, not backing',
+    description: 'Cut through sticker only, leaves backing intact',
     icon: '🔪',
     features: ['Sheet format', 'Easy weeding', 'Multiple per sheet', 'Clean removal'],
     recommended: false
@@ -238,12 +238,12 @@ export default function DieCutStickersPage() {
               <h1 className="text-5xl font-bold mb-6 leading-tight">
                 Custom Die-Cut
                 <span className="block bg-gradient-to-r from-cyan-300 to-purple-300 bg-clip-text text-transparent">
-                  Stickers & Labels
+                  Stickers
                 </span>
               </h1>
               <p className="text-xl text-blue-100 mb-8 leading-relaxed">
                 Professional-grade custom stickers with precision die-cutting. Any shape, 
-                any size, premium materials with Brooklyn quality you can trust.
+                any size, premium vinyl and materials with Brooklyn quality you can trust.
               </p>
               <div className="flex flex-wrap items-center gap-6 text-sm">
                 <div className="flex items-center space-x-2">
@@ -560,7 +560,7 @@ export default function DieCutStickersPage() {
                   Professional Sticker Designer
                 </span>
                 <span className="ml-2 px-2 py-1 bg-gradient-to-r from-purple-500 to-blue-600 text-white text-xs rounded-full font-bold">
-                  AI POWERED
+                  PRO TOOLS
                 </span>
               </h3>
               <div className="mb-4 text-sm text-gray-600">

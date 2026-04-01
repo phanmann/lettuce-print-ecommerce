@@ -173,8 +173,8 @@ export const productCatalog: Product[] = [
   {
     id: 'die-cut-stickers',
     name: 'Die-Cut Stickers',
-    description: 'Precision-cut custom stickers in any shape with professional-grade materials and AI design tools',
-    category: 'Labels & Stickers',
+    description: 'Precision-cut custom stickers in any shape with premium vinyl materials and AI design tools',
+    category: 'Stickers',
     basePrice: 30.00,
     images: ['/images/products/die-cut-stickers-1.jpg', '/images/products/die-cut-stickers-2.jpg'],
     specifications: {
