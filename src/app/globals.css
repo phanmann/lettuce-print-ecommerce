@@ -1,369 +1,1058 @@
-/* Import the Brooklyn design fonts */
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=DM+Mono:wght@400;500&display=swap');
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Brooklyn Design System Animations */
-@keyframes scroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-@keyframes scrollLeft {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-/* Reveal Animation */
-.rv {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.65s ease, transform 0.65s ease;
-}
-
-.rv.in {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Custom scrollbar hiding */
-.scrollbar-none {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.scrollbar-none::-webkit-scrollbar {
-  display: none;
-}
-
-/* Cursor customization */
-body {
-  cursor: none;
-}
-
-a, button, input, textarea, select {
-  cursor: none;
-}
-
-/* Brooklyn specific utility classes */
-.max-w-70 {
-  max-width: 17.5rem;
-}
-
-.max-w-78 {
-  max-width: 19.5rem;
-}
-
-.max-w-85 {
-  max-width: 21.25rem;
-}
-
-.w-70 {
-  width: 17.5rem;
-}
-
-.w-78 {
-  width: 19.5rem;
-}
-
-.h-50 {
-  height: 12.5rem;
-}
-
-.w-13 {
-  width: 3.25rem;
-}
-
-.h-13 {
-  height: 3.25rem;
-}
-
-.h-17 {
-  height: 4.25rem;
-}
-
-.pt-17 {
-  padding-top: 4.25rem;
-}
-
-.py-18 {
-  padding-top: 4.5rem;
-  padding-bottom: 4.5rem;
-}
-
-.py-22 {
-  padding-top: 5.5rem;
-  padding-bottom: 5.5rem;
-}
-
-.py-25 {
-  padding-top: 6.25rem;
-  padding-bottom: 6.25rem;
-}
-
-.min-w-10 {
-  min-width: 2.5rem;
-}
-
-:root {
-  --foreground-rgb: 23, 23, 23;
-  --background-start-rgb: 250, 250, 250;
-  --background-end-rgb: 255, 255, 255;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-  font-family: 'Inter', system-ui, sans-serif;
-  line-height: 1.6;
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Premium Typography */
-.editorial-title {
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-}
-
-.editorial-subtitle {
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  line-height: 1.4;
-}
-
-/* Premium Animations */
-@keyframes premiumFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes premiumScaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.animate-premium-fade-in {
-  animation: premiumFadeIn 0.8s ease-out forwards;
-}
-
-.animate-premium-scale-in {
-  animation: premiumScaleIn 0.6s ease-out forwards;
-}
-
-/* Premium Components */
-@layer components {
-  .container-custom {
-    @apply max-w-6xl mx-auto px-6 sm:px-8 lg:px-12;
-  }
-  
-  .container-narrow {
-    @apply max-w-4xl mx-auto px-6 sm:px-8 lg:px-12;
-  }
-  
-  /* Premium Buttons */
-  .btn-premium {
-    @apply inline-flex items-center justify-center px-8 py-4 text-base font-medium rounded-full transition-all duration-300 ease-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-opacity-50;
-  }
-  
-  .btn-premium-primary {
-    @apply btn-premium bg-lettuce-green hover:bg-lettuce-dark text-white shadow-lg hover:shadow-xl focus:ring-lettuce-green;
-  }
-  
-  .btn-premium-secondary {
-    @apply btn-premium bg-neutral-900 hover:bg-neutral-800 text-white shadow-lg hover:shadow-xl focus:ring-neutral-900;
-  }
-  
-  .btn-premium-outline {
-    @apply btn-premium border-2 border-lettuce-green text-lettuce-green hover:bg-lettuce-green hover:text-white focus:ring-lettuce-green;
-  }
-  
-  /* Premium Cards */
-  .card-premium {
-    @apply bg-premium-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 ease-out border border-neutral-100;
-  }
-  
-  /* Premium Sections */
-  .section-premium {
-    @apply py-24 sm:py-32;
-  }
-  
-  .section-hero {
-    @apply py-32 sm:py-48;
-  }
-  
-  /* Premium Typography Classes */
-  .text-editorial-hero {
-    @apply text-5xl sm:text-7xl lg:text-8xl font-semibold editorial-title;
-  }
-  
-  .text-editorial-large {
-    @apply text-3xl sm:text-5xl lg:text-6xl font-medium editorial-title;
-  }
-  
-  .text-editorial-medium {
-    @apply text-2xl sm:text-3xl lg:text-4xl font-medium editorial-title;
-  }
-  
-  .text-premium-lead {
-    @apply text-lg sm:text-xl lg:text-2xl text-neutral-600 editorial-subtitle;
-  }
-  
-  .text-premium-body {
-    @apply text-base sm:text-lg text-neutral-600 leading-relaxed;
-  }
-  
-  /* Premium Effects */
-  .premium-gradient {
-    background: linear-gradient(135deg, #00a175 0%, #008060 100%);
-  }
-  
-  .premium-gradient-light {
-    background: linear-gradient(135deg, #e6f7f2 0%, #ffffff 100%);
-  }
-  
-  .premium-shadow {
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  }
-  
-  .premium-shadow-subtle {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  }
-
-  /* E-commerce Button Styles */
-  .btn-primary {
-    @apply inline-flex items-center justify-center px-6 py-3 bg-lettuce-green hover:bg-lettuce-dark text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-lettuce-green focus:ring-opacity-50;
-  }
-  
-  .btn-secondary {
-    @apply inline-flex items-center justify-center px-6 py-3 bg-white hover:bg-gray-50 text-gray-700 font-medium rounded-lg border border-gray-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-lettuce-green focus:ring-opacity-50;
-  }
-  
-  .btn-danger {
-    @apply inline-flex items-center justify-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50;
-  }
-  
-  .btn-outline {
-    @apply inline-flex items-center justify-center px-6 py-3 bg-transparent hover:bg-lettuce-green hover:bg-opacity-10 text-lettuce-green font-medium rounded-lg border border-lettuce-green transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-lettuce-green focus:ring-opacity-50;
-  }
-
-  /* E-commerce Form Styles */
-  .form-input {
-    @apply w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-lettuce-green focus:border-lettuce-green transition-colors duration-200;
-  }
-  
-  .form-select {
-    @apply w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-lettuce-green focus:border-lettuce-green transition-colors duration-200 bg-white;
-  }
-  
-  .form-textarea {
-    @apply w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-lettuce-green focus:border-lettuce-green transition-colors duration-200 resize-vertical;
-  }
-
-  /* E-commerce Card Styles */
-  .card {
-    @apply bg-white rounded-lg shadow-md border border-gray-200;
-  }
-  
-  .card-hover {
-    @apply card hover:shadow-lg transition-shadow duration-200;
-  }
-
-  /* E-commerce Status Badges */
-  .badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
-  }
-  
-  .badge-success {
-    @apply badge bg-green-100 text-green-800;
-  }
-  
-  .badge-warning {
-    @apply badge bg-yellow-100 text-yellow-800;
-  }
-  
-  .badge-error {
-    @apply badge bg-red-100 text-red-800;
-  }
-  
-  .badge-info {
-    @apply badge bg-blue-100 text-blue-800;
-  }
-
-  /* Loading States */
-  .loading-spinner {
-    @apply animate-spin rounded-full h-4 w-4 border-b-2 border-current;
-  }
-  
-  .loading-dots {
-    @apply inline-flex space-x-1;
-  }
-  
-  .loading-dots div {
-    @apply w-2 h-2 bg-current rounded-full animate-bounce;
-    animation-delay: calc(var(--i) * 0.1s);
-  }
-
-  /* Price Display */
-  .price {
-    @apply font-bold text-lettuce-green;
-  }
-  
-  .price-strikethrough {
-    @apply text-gray-500 line-through;
-  }
-  
-  .price-saving {
-    @apply text-green-600 font-semibold;
-  }
-}
+/* Lettuce Print - Complete Design System */                                 
+   @import                                                                      
+ url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family 
+ =DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=DM+Mono:wght@400;500&d 
+ isplay=swap');                                                                 
+                                                                                
+   :root {                                                                      
+     --white: #ffffff;                                                          
+     --black: #0d0d0d;                                                          
+     --green: #2e6b38;                                                          
+     --green-bright: #3dba52;                                                   
+     --yellow: #f5e642;                                                         
+     --pink: #f5a8c8;                                                           
+     --blue: #a8d4f5;                                                           
+     --orange: #f5a86e;                                                         
+     --brown: #8b5e3c;                                                          
+     --cream: #faf8f4;                                                          
+     --muted: #666;                                                             
+     --rule: #ebebeb;                                                           
+   }                                                                            
+                                                                                
+   *, *::before, *::after {                                                     
+     margin: 0;                                                                 
+     padding: 0;                                                                
+     box-sizing: border-box;                                                    
+   }                                                                            
+                                                                                
+   html {                                                                       
+     scroll-behavior: smooth;                                                   
+   }                                                                            
+                                                                                
+   body {                                                                       
+     font-family: 'DM Sans', sans-serif;                                        
+     background: var(--white);                                                  
+     color: var(--black);                                                       
+     overflow-x: hidden;                                                        
+     cursor: none;                                                              
+   }                                                                            
+                                                                                
+   /* CUSTOM CURSOR */                                                          
+   #cur {                                                                       
+     width: 12px;                                                               
+     height: 12px;                                                              
+     background: var(--green);                                                  
+     border-radius: 50%;                                                        
+     position: fixed;                                                           
+     top: 0;                                                                    
+     left: 0;                                                                   
+     pointer-events: none;                                                      
+     z-index: 9999;                                                             
+   }                                                                            
+                                                                                
+   #cur-ring {                                                                  
+     width: 40px;                                                               
+     height: 40px;                                                              
+     border: 2px solid var(--green);                                            
+     border-radius: 50%;                                                        
+     position: fixed;                                                           
+     top: 0;                                                                    
+     left: 0;                                                                   
+     pointer-events: none;                                                      
+     z-index: 9998;                                                             
+     opacity: 0.4;                                                              
+   }                                                                            
+                                                                                
+   /* NAVIGATION */                                                             
+   nav {                                                                        
+     position: fixed;                                                           
+     top: 0;                                                                    
+     left: 0;                                                                   
+     right: 0;                                                                  
+     z-index: 200;                                                              
+     display: flex;                                                             
+     align-items: center;                                                       
+     justify-content: space-between;                                            
+     padding: 0 40px;                                                           
+     height: 68px;                                                              
+     background: rgba(255, 255, 255, 0.95);                                     
+     backdrop-filter: blur(14px);                                               
+     border-bottom: 1.5px solid var(--rule);                                    
+   }                                                                            
+                                                                                
+   .nav-logo {                                                                  
+     font-weight: 700;                                                          
+     font-size: 18px;                                                           
+     color: var(--black);                                                       
+     text-decoration: none;                                                     
+     display: flex;                                                             
+     align-items: center;                                                       
+     gap: 8px;                                                                  
+     letter-spacing: -0.02em;                                                   
+   }                                                                            
+                                                                                
+   .nav-links {                                                                 
+     display: flex;                                                             
+     gap: 32px;                                                                 
+     list-style: none;                                                          
+   }                                                                            
+                                                                                
+   .nav-links a {                                                               
+     font-size: 14px;                                                           
+     font-weight: 500;                                                          
+     color: var(--muted);                                                       
+     text-decoration: none;                                                     
+     transition: color 0.2s;                                                    
+   }                                                                            
+                                                                                
+   .nav-links a:hover {                                                         
+     color: var(--black);                                                       
+   }                                                                            
+                                                                                
+   .nav-cta {                                                                   
+     background: var(--black);                                                  
+     color: var(--white);                                                       
+     font-size: 13px;                                                           
+     font-weight: 600;                                                          
+     padding: 10px 22px;                                                        
+     border-radius: 100px;                                                      
+     text-decoration: none;                                                     
+     transition: background 0.2s, transform 0.2s;                               
+   }                                                                            
+                                                                                
+   .nav-cta:hover {                                                             
+     background: var(--green);                                                  
+     transform: translateY(-1px);                                               
+   }                                                                            
+                                                                                
+   /* HERO */                                                                   
+   .hero {                                                                      
+     padding-top: 68px;                                                         
+     min-height: 100vh;                                                         
+     display: flex;                                                             
+     flex-direction: column;                                                    
+     overflow: hidden;                                                          
+   }                                                                            
+                                                                                
+   .hero-top-row {                                                              
+     display: grid;                                                             
+     grid-template-columns: 1fr 420px;                                          
+     gap: 32px;                                                                 
+     padding: 44px 40px 0;                                                      
+     align-items: center;                                                       
+   }                                                                            
+                                                                                
+   .hero-desc {                                                                 
+     font-size: 15px;                                                           
+     color: var(--muted);                                                       
+     max-width: 420px;                                                          
+     line-height: 1.7;                                                          
+     margin-bottom: 24px;                                                       
+   }                                                                            
+                                                                                
+   h1.big-head {                                                                
+     font-family: 'Instrument Serif', serif;                                    
+     font-size: clamp(56px, 7.5vw, 112px);                                      
+     line-height: 0.91;                                                         
+     letter-spacing: -0.02em;                                                   
+     color: var(--black);                                                       
+     font-weight: 400;                                                          
+   }                                                                            
+                                                                                
+   h1.big-head em {                                                             
+     font-style: italic;                                                        
+     color: var(--green);                                                       
+   }                                                                            
+                                                                                
+   .hero-photo {                                                                
+     width: 100%;                                                               
+     height: 320px;                                                             
+     border-radius: 24px;                                                       
+     overflow: hidden;                                                          
+     position: relative;                                                        
+     flex-shrink: 0;                                                            
+   }                                                                            
+                                                                                
+   .hero-photo img {                                                            
+     width: 100%;                                                               
+     height: 100%;                                                              
+     object-fit: cover;                                                         
+   }                                                                            
+                                                                                
+   .hero-photo-badge {                                                          
+     position: absolute;                                                        
+     bottom: 16px;                                                              
+     left: 16px;                                                                
+     background: var(--yellow);                                                 
+     color: var(--black);                                                       
+     font-size: 12px;                                                           
+     font-weight: 700;                                                          
+     letter-spacing: 0.06em;                                                    
+     text-transform: uppercase;                                                 
+     padding: 8px 16px;                                                         
+     border-radius: 100px;                                                      
+   }                                                                            
+                                                                                
+   .hero-cards-row {                                                            
+     display: flex;                                                             
+     gap: 14px;                                                                 
+     padding: 28px 40px 0;                                                      
+     align-items: flex-start;                                                   
+     flex-wrap: nowrap;                                                         
+   }                                                                            
+                                                                                
+   .hcard {                                                                     
+     border-radius: 18px;                                                       
+     flex-shrink: 0;                                                            
+     position: relative;                                                        
+     overflow: hidden;                                                          
+     display: flex;                                                             
+     align-items: center;                                                       
+     justify-content: center;                                                   
+   }                                                                            
+                                                                                
+   .hcard img {                                                                 
+     width: 100%;                                                               
+     height: 100%;                                                              
+     object-fit: cover;                                                         
+   }                                                                            
+                                                                                
+   .hcard.pink {                                                                
+     background: var(--pink);                                                   
+     flex: 1;                                                                   
+     min-width: 180px;                                                          
+     height: 160px;                                                             
+   }                                                                            
+                                                                                
+   .hcard.green {                                                               
+     background: var(--green-bright);                                           
+     flex: 1.3;                                                                 
+     min-width: 220px;                                                          
+     height: 160px;                                                             
+   }                                                                            
+                                                                                
+   .hcard.yellow {                                                              
+     background: var(--yellow);                                                 
+     flex: 1.1;                                                                 
+     min-width: 190px;                                                          
+     height: 160px;                                                             
+   }                                                                            
+                                                                                
+   .hcard.brown {                                                               
+     background: var(--brown);                                                  
+     flex: 1;                                                                   
+     min-width: 180px;                                                          
+     height: 160px;                                                             
+   }                                                                            
+                                                                                
+   .hcard.blue {                                                                
+     background: var(--blue);                                                   
+     flex: 0.85;                                                                
+     min-width: 150px;                                                          
+     height: 160px;                                                             
+   }                                                                            
+                                                                                
+   .hcard-label {                                                               
+     position: absolute;                                                        
+     bottom: 10px;                                                              
+     left: 10px;                                                                
+     background: rgba(255, 255, 255, 0.92);                                     
+     font-size: 10px;                                                           
+     font-weight: 700;                                                          
+     letter-spacing: 0.1em;                                                     
+     text-transform: uppercase;                                                 
+     padding: 5px 12px;                                                         
+     border-radius: 100px;                                                      
+     color: var(--black);                                                       
+   }                                                                            
+                                                                                
+   .hcard-emoji {                                                               
+     font-size: 56px;                                                           
+   }                                                                            
+                                                                                
+   .talk-bubble {                                                               
+     position: absolute;                                                        
+     top: 50%;                                                                  
+     left: 50%;                                                                 
+     transform: translate(-50%, -50%);                                          
+     background: var(--black);                                                  
+     color: var(--white);                                                       
+     font-size: 14px;                                                           
+     font-weight: 700;                                                          
+     padding: 11px 20px;                                                        
+     border-radius: 100px;                                                      
+     white-space: nowrap;                                                       
+     z-index: 2;                                                                
+   }                                                                            
+                                                                                
+   .talk-bubble::after {                                                        
+     content: '';                                                               
+     position: absolute;                                                        
+     bottom: -10px;                                                             
+     left: 22px;                                                                
+     width: 0;                                                                  
+     height: 0;                                                                 
+     border-left: 9px solid transparent;                                        
+     border-right: 9px solid transparent;                                       
+     border-top: 11px solid var(--black);                                       
+   }                                                                            
+                                                                                
+   .hero-bottom {                                                               
+     display: flex;                                                             
+     align-items: center;                                                       
+     justify-content: space-between;                                            
+     padding: 24px 40px 40px;                                                   
+   }                                                                            
+                                                                                
+   .hero-actions {                                                              
+     display: flex;                                                             
+     gap: 12px;                                                                 
+     align-items: center;                                                       
+   }                                                                            
+                                                                                
+   .btn-pill-dark {                                                             
+     background: var(--black);                                                  
+     color: var(--white);                                                       
+     font-size: 14px;                                                           
+     font-weight: 600;                                                          
+     padding: 14px 28px;                                                        
+     border-radius: 100px;                                                      
+     text-decoration: none;                                                     
+     transition: all 0.2s;                                                      
+     display: flex;                                                             
+     align-items: center;                                                       
+     gap: 8px;                                                                  
+   }                                                                            
+                                                                                
+   .btn-pill-dark:hover {                                                       
+     background: var(--green);                                                  
+     transform: translateY(-2px);                                               
+   }                                                                            
+                                                                                
+   .btn-pill-outline {                                                          
+     border: 2px solid var(--black);                                            
+     color: var(--black);                                                       
+     font-size: 14px;                                                           
+     font-weight: 600;                                                          
+     padding: 14px 28px;                                                        
+     border-radius: 100px;                                                      
+     text-decoration: none;                                                     
+     transition: all 0.2s;                                                      
+     display: flex;                                                             
+     align-items: center;                                                       
+     gap: 8px;                                                                  
+   }                                                                            
+                                                                                
+   .btn-pill-outline:hover {                                                    
+     border-color: var(--green);                                                
+     color: var(--green);                                                       
+   }                                                                            
+                                                                                
+   .hero-stats {                                                                
+     display: flex;                                                             
+     gap: 40px;                                                                 
+   }                                                                            
+                                                                                
+   .hs {                                                                        
+     text-align: right;                                                         
+   }                                                                            
+                                                                                
+   .hs-n {                                                                      
+     font-family: 'Instrument Serif', serif;                                    
+     font-size: 40px;                                                           
+     color: var(--green);                                                       
+     line-height: 1;                                                            
+     font-style: italic;                                                        
+   }                                                                            
+                                                                                
+   .hs-l {                                                                      
+     font-size: 11px;                                                           
+     color: var(--muted);                                                       
+     margin-top: 2px;                                                           
+     font-weight: 500;                                                          
+     letter-spacing: 0.05em;                                                    
+     text-transform: uppercase;                                                 
+   }                                                                            
+                                                                                
+   /* TICKER */                                                                 
+   .ticker {                                                                    
+     background: var(--green);                                                  
+     padding: 13px 0;                                                           
+     overflow: hidden;                                                          
+     white-space: nowrap;                                                       
+   }                                                                            
+                                                                                
+   .ticker-track {                                                              
+     display: inline-flex;                                                      
+     animation: tick 26s linear infinite;                                       
+   }                                                                            
+                                                                                
+   @keyframes tick {                                                            
+     from { transform: translateX(0); }                                         
+     to { transform: translateX(-50%); }                                        
+   }                                                                            
+                                                                                
+   .ticker-track:hover {                                                        
+     animation-play-state: paused;                                              
+   }                                                                            
+                                                                                
+   .ti {                                                                        
+     font-size: 16px;                                                           
+     font-weight: 700;                                                          
+     color: var(--white);                                                       
+     padding: 0 28px;                                                           
+     display: inline-flex;                                                      
+     align-items: center;                                                       
+     gap: 28px;                                                                 
+     letter-spacing: 0.02em;                                                    
+   }                                                                            
+                                                                                
+   .ti::after {                                                                 
+     content: '✦';                                                              
+     font-size: 9px;                                                            
+     opacity: 0.55;                                                             
+   }                                                                            
+                                                                                
+   /* UBER BAR */                                                               
+   .uber-bar {                                                                  
+     background: var(--black);                                                  
+     padding: 18px 40px;                                                        
+     display: flex;                                                             
+     align-items: center;                                                       
+     justify-content: space-between;                                            
+     gap: 24px;                                                                 
+     flex-wrap: wrap;                                                           
+   }                                                                            
+                                                                                
+   .uber-bar-inner {                                                            
+     display: flex;                                                             
+     align-items: center;                                                       
+     gap: 16px;                                                                 
+   }                                                                            
+                                                                                
+   .uber-icon {                                                                 
+     font-size: 30px;                                                           
+   }                                                                            
+                                                                                
+   .uber-title {                                                                
+     font-weight: 700;                                                          
+     font-size: 16px;                                                           
+     color: #fff;                                                               
+     letter-spacing: -0.01em;                                                   
+   }                                                                            
+                                                                                
+   .uber-sub {                                                                  
+     font-size: 13px;                                                           
+     color: #888;                                                               
+     margin-top: 3px;                                                           
+     line-height: 1.5;                                                          
+     max-width: 540px;                                                          
+   }                                                                            
+                                                                                
+   .uber-cta {                                                                  
+     background: var(--yellow);                                                 
+     color: var(--black);                                                       
+     font-weight: 700;                                                          
+     font-size: 13px;                                                           
+     padding: 11px 22px;                                                        
+     border-radius: 100px;                                                      
+     text-decoration: none;                                                     
+     white-space: nowrap;                                                       
+     flex-shrink: 0;                                                            
+     transition: transform 0.2s;                                                
+   }                                                                            
+                                                                                
+   .uber-cta:hover {                                                            
+     transform: translateY(-1px);                                               
+   }                                                                            
+                                                                                
+   /* ABOUT */                                                                  
+   .about-section {                                                             
+     display: grid;                                                             
+     grid-template-columns: 1fr 1fr;                                            
+     border-bottom: 1.5px solid var(--rule);                                    
+   }                                                                            
+                                                                                
+   .about-left {                                                                
+     padding: 88px 40px;                                                        
+     border-right: 1.5px solid var(--rule);                                     
+     display: flex;                                                             
+     flex-direction: column;                                                    
+     justify-content: center;                                                   
+   }                                                                            
+                                                                                
+   .section-tag {                                                               
+     display: inline-flex;                                                      
+     align-items: center;                                                       
+     gap: 6px;                                                                  
+     background: #e6f4e8;                                                       
+     color: var(--green);                                                       
+     font-size: 12px;                                                           
+     font-weight: 600;                                                          
+     letter-spacing: 0.08em;                                                    
+     text-transform: uppercase;                                                 
+     padding: 6px 14px;                                                         
+     border-radius: 100px;                                                      
+     margin-bottom: 28px;                                                       
+   }                                                                            
+                                                                                
+   h2.section-head {                                                            
+     font-family: 'Instrument Serif', serif;                                    
+     font-size: clamp(44px, 4.5vw, 68px);                                       
+     line-height: 1;                                                            
+     font-weight: 400;                                                          
+     color: var(--black);                                                       
+     margin-bottom: 20px;                                                       
+     letter-spacing: -0.02em;                                                   
+   }                                                                            
+                                                                                
+   h2.section-head em {                                                         
+     font-style: italic;                                                        
+     color: var(--green);                                                       
+   }                                                                            
+                                                                                
+   .about-body {                                                                
+     font-size: 16px;                                                           
+     line-height: 1.8;                                                          
+     color: var(--muted);                                                       
+     max-width: 420px;                                                          
+     margin-bottom: 36px;                                                       
+   }                                                                            
+                                                                                
+   .tag-list {                                                                  
+     display: flex;                                                             
+     flex-wrap: wrap;                                                           
+     gap: 8px;                                                                  
+   }                                                                            
+                                                                                
+   .pill-tag {                                                                  
+     background: #f0f0f0;                                                       
+     color: var(--black);                                                       
+     font-size: 13px;                                                           
+     font-weight: 500;                                                          
+     padding: 8px 18px;                                                         
+     border-radius: 100px;                                                      
+     transition: background 0.2s;                                               
+   }                                                                            
+                                                                                
+   .pill-tag:hover {                                                            
+     background: var(--yellow);                                                 
+   }                                                                            
+                                                                                
+   .about-right {                                                               
+     padding: 48px 40px;                                                        
+     background: var(--white);                                                  
+     display: flex;                                                             
+     flex-direction: column;                                                    
+     justify-content: center;                                                   
+   }                                                                            
+                                                                                
+   .about-map-wrap {                                                            
+     border-radius: 20px;                                                       
+     overflow: hidden;                                                          
+     height: 340px;                                                             
+     border: 1.5px solid var(--rule);                                           
+   }                                                                            
+                                                                                
+   .about-map-wrap iframe {                                                     
+     width: 100%;                                                               
+     height: 100%;                                                              
+     border: none;                                                              
+     display: block;                                                            
+   }                                                                            
+                                                                                
+   .about-map-info {                                                            
+     display: grid;                                                             
+     grid-template-columns: 1fr 1fr;                                            
+     margin-top: 20px;                                                          
+     border: 1.5px solid var(--rule);                                           
+     border-radius: 16px;                                                       
+     overflow: hidden;                                                          
+   }                                                                            
+                                                                                
+   .map-info-cell {                                                             
+     padding: 20px 24px;                                                        
+     border-right: 1.5px solid var(--rule);                                     
+   }                                                                            
+                                                                                
+   .map-info-cell:last-child {                                                  
+     border-right: none;                                                        
+   }                                                                            
+                                                                                
+   .map-info-cell:nth-child(3) {                                                
+     border-right: 1.5px solid var(--rule);                                     
+     border-top: 1.5px solid var(--rule);                                       
+   }                                                                            
+                                                                                
+   .map-info-cell:nth-child(4) {                                                
+     border-top: 1.5px solid var(--rule);                                       
+   }                                                                            
+                                                                                
+   .map-info-label {                                                            
+     font-size: 11px;                                                           
+     font-weight: 600;                                                          
+     letter-spacing: 0.1em;                                                     
+     text-transform: uppercase;                                                 
+     color: var(--muted);                                                       
+     margin-bottom: 6px;                                                        
+   }                                                                            
+                                                                                
+   .map-info-val {                                                              
+     font-size: 14px;                                                           
+     font-weight: 500;                                                          
+     color: var(--black);                                                       
+     line-height: 1.5;                                                          
+   }                                                                            
+                                                                                
+   .map-info-val a {                                                            
+     color: var(--green);                                                       
+     text-decoration: none;                                                     
+   }                                                                            
+                                                                                
+   .map-info-val a:hover {                                                      
+     text-decoration: underline;                                                
+   }                                                                            
+                                                                                
+   /* SERVICES */                                                               
+   .services-section {                                                          
+     padding: 88px 40px;                                                        
+     border-bottom: 1.5px solid var(--rule);                                    
+   }                                                                            
+                                                                                
+   .services-top {                                                              
+     display: flex;                                                             
+     justify-content: space-between;                                            
+     align-items: flex-end;                                                     
+     margin-bottom: 56px;                                                       
+   }                                                                            
+                                                                                
+   h2.svc-head {                                                                
+     font-family: 'Instrument Serif', serif;                                    
+     font-size: clamp(48px, 5vw, 80px);                                         
+     line-height: 0.95;                                                         
+     font-weight: 400;                                                          
+     letter-spacing: -0.02em;                                                   
+   }                                                                            
+                                                                                
+   h2.svc-head em {                                                             
+     font-style: italic;                                                        
+     color: var(--green);                                                       
+   }                                                                            
+                                                                                
+   .svc-desc {                                                                  
+     max-width: 280px;                                                          
+     font-size: 14px;                                                           
+     line-height: 1.75;                                                         
+     color: var(--muted);                                                       
+   }                                                                            
+                                                                                
+   .svc-list {                                                                  
+     display: flex;                                                             
+     flex-direction: column;                                                    
+   }                                                                            
+                                                                                
+   .svc-item {                                                                  
+     display: flex;                                                             
+     align-items: center;                                                       
+     padding: 26px 0;                                                           
+     border-top: 1.5px solid var(--rule);                                       
+     gap: 24px;                                                                 
+     cursor: none;                                                              
+     transition: padding 0.25s;                                                 
+     position: relative;                                                        
+   }                                                                            
+                                                                                
+   .svc-item:last-child {                                                       
+     border-bottom: 1.5px solid var(--rule);                                    
+   }                                                                            
+                                                                                
+   .svc-item:hover {                                                            
+     padding-left: 14px;                                                        
+     padding-right: 14px;                                                       
+   }                                                                            
+                                                                                
+   .svc-num {                                                                   
+     font-family: 'DM Mono', monospace;                                         
+     font-size: 11px;                                                           
+     letter-spacing: 0.12em;                                                    
+     color: var(--muted);                                                       
+     min-width: 40px;                                                           
+   }                                                                            
+                                                                                
+   .svc-icon-bubble {                                                           
+     width: 52px;                                                               
+     height: 52px;                                                              
+     border-radius: 50%;                                                        
+     display: flex;                                                             
+     align-items: center;                                                       
+     justify-content: center;                                                   
+     font-size: 24px;                                                           
+     flex-shrink: 0;                                                            
+     transition: transform 0.25s;                                               
+   }                                                                            
+                                                                                
+   .svc-item:hover .svc-icon-bubble {                                           
+     transform: scale(1.15) rotate(-5deg);                                      
+   }                                                                            
+                                                                                
+   .svc-name {                                                                  
+     font-family: 'Instrument Serif', serif;                                    
+     font-size: 28px;                                                           
+     font-weight: 400;                                                          
+     color: var(--black);                                                       
+     flex: 1;                                                                   
+     letter-spacing: -0.01em;                                                   
+     transition: color 0.2s;                                                    
+   }                                                                            
+                                                                                
+   .svc-item:hover .svc-name {                                                  
+     color: var(--green);                                                       
+   }                                                                            
+                                                                                
+   .svc-detail {                                                                
+     font-size: 14px;                                                           
+     color: var(--muted);                                                       
+     max-width: 340px;                                                          
+     line-height: 1.65;                                                         
+   }                                                                            
+                                                                                
+   .svc-arrow {                                                                 
+     width: 44px;                                                               
+     height: 44px;                                                              
+     border-radius: 50%;                                                        
+     border: 2px solid #e0e0e0;                                                 
+     display: flex;                                                             
+     align-items: center;                                                       
+     justify-content: center;                                                   
+     font-size: 18px;                                                           
+     color: var(--muted);                                                       
+     transition: all 0.25s;                                                     
+     flex-shrink: 0;                                                            
+   }                                                                            
+                                                                                
+   .svc-item:hover .svc-arrow {                                                 
+     background: var(--green);                                                  
+     border-color: var(--green);                                                
+     color: #fff;                                                               
+     transform: rotate(45deg);                                                  
+   }                                                                            
+                                                                                
+   /* CONTACT */                                                                
+   .contact-section {                                                           
+     padding: 100px 40px;                                                       
+     display: grid;                                                             
+     grid-template-columns: 1fr 1fr;                                            
+     gap: 80px;                                                                 
+     align-items: center;                                                       
+     border-bottom: 1.5px solid var(--rule);                                    
+   }                                                                            
+                                                                                
+   .contact-left h2 {                                                           
+     font-family: 'Instrument Serif', serif;                                    
+     font-size: clamp(48px, 5.5vw, 84px);                                       
+     line-height: 0.95;                                                         
+     font-weight: 400;                                                          
+     letter-spacing: -0.02em;                                                   
+     margin-bottom: 40px;                                                       
+   }                                                                            
+                                                                                
+   .contact-left h2 em {                                                        
+     font-style: italic;                                                        
+     color: var(--green);                                                       
+   }                                                                            
+                                                                                
+   .contact-method {                                                            
+     padding-bottom: 32px;                                                      
+     margin-bottom: 32px;                                                       
+     border-bottom: 1.5px solid var(--rule);                                    
+   }                                                                            
+                                                                                
+   .contact-method:last-child {                                                 
+     border-bottom: none;                                                       
+     margin-bottom: 0;                                                          
+     padding-bottom: 0;                                                         
+   }                                                                            
+                                                                                
+   .contact-method-label {                                                      
+     font-family: 'Instrument Serif', serif;                                    
+     font-size: 38px;                                                           
+     font-weight: 400;                                                          
+     margin-bottom: 8px;                                                        
+   }                                                                            
+                                                                                
+   .contact-method-link {                                                       
+     display: flex;                                                             
+     align-items: center;                                                       
+     gap: 10px;                                                                 
+     font-size: 15px;                                                           
+     font-weight: 500;                                                          
+     color: var(--muted);                                                       
+     text-decoration: none;                                                     
+     transition: color 0.2s;                                                    
+   }                                                                            
+                                                                                
+   .contact-method-link:hover {                                                 
+     color: var(--green);                                                       
+   }                                                                            
+                                                                                
+   .contact-arrow {                                                             
+     width: 30px;                                                               
+     height: 30px;                                                              
+     border-radius: 50%;                                                        
+     background: var(--black);                                                  
+     color: #fff;                                                               
+     display: flex;                                                             
+     align-items: center;                                                       
+     justify-content: center;                                                   
+     font-size: 13px;                                                           
+     flex-shrink: 0;                                                            
+   }                                                                            
+                                                                                
+   .contact-right {                                                             
+     background: var(--yellow);                                                 
+     border-radius: 28px;                                                       
+     padding: 48px;                                                             
+   }                                                                            
+                                                                                
+   .contact-right .big-emoji {                                                  
+     font-size: 72px;                                                           
+     margin-bottom: 20px;                                                       
+     display: block;                                                            
+   }                                                                            
+                                                                                
+   .contact-right h3 {                                                          
+     font-family: 'Instrument Serif', serif;                                    
+     font-size: 34px;                                                           
+     font-weight: 400;                                                          
+     margin-bottom: 12px;                                                       
+     letter-spacing: -0.01em;                                                   
+     line-height: 1.1;                                                          
+   }                                                                            
+                                                                                
+   .contact-right h3 em {                                                       
+     font-style: italic;                                                        
+   }                                                                            
+                                                                                
+   .contact-right p {                                                           
+     font-size: 14px;                                                           
+     color: #555;                                                               
+     line-height: 1.7;                                                          
+     margin-bottom: 28px;                                                       
+   }                                                                            
+                                                                                
+   .contact-form {                                                              
+     display: flex;                                                             
+     flex-direction: column;                                                    
+     gap: 12px;                                                                 
+   }                                                                            
+                                                                                
+   .cf-input {                                                                  
+     border: 2px solid rgba(0, 0, 0, 0.12);                                     
+     border-radius: 100px;                                                      
+     padding: 14px 20px;                                                        
+     font-family: 'DM Sans', sans-serif;                                        
+     font-size: 14px;                                                           
+     background: #fff;                                                          
+     outline: none;                                                             
+     transition: border-color 0.2s;                                             
+   }                                                                            
+                                                                                
+   .cf-input:focus {                                                            
+     border-color: var(--green);                                                
+   }                                                                            
+                                                                                
+   .cf-textarea {                                                               
+     border: 2px solid rgba(0, 0, 0, 0.12);                                     
+     border-radius: 20px;                                                       
+     padding: 14px 20px;                                                        
+     font-family: 'DM Sans', sans-serif;                                        
+     font-size: 14px;                                                           
+     background: #fff;                                                          
+     outline: none;                                                             
+     resize: none;                                                              
+     height: 110px;                                                             
+     transition: border-color 0.2s;                                             
+   }                                                                            
+                                                                                
+   .cf-textarea:focus {                                                         
+     border-color: var(--green);                                                
+   }                                                                            
+                                                                                
+   .cf-submit {                                                                 
+     background: var(--black);                                                  
+     color: #fff;                                                               
+     border: none;                                                              
+     border-radius: 100px;                                                      
+     padding: 16px 32px;                                                        
+     font-size: 14px;                                                           
+     font-weight: 700;                                                          
+     cursor: none;                                                              
+     font-family: 'DM Sans', sans-serif;                                        
+     transition: background 0.2s, transform 0.2s;                               
+   }                                                                            
+                                                                                
+   .cf-submit:hover {                                                           
+     background: var(--green);                                                  
+     transform: translateY(-2px);                                               
+   }                                                                            
+                                                                                
+   /* FOOTER */                                                                 
+   footer {                                                                     
+     background: var(--black);                                                  
+     color: #888;                                                               
+     padding: 72px 40px 36px;                                                   
+   }                                                                            
+                                                                                
+   .footer-top {                                                                
+     display: grid;                                                             
+     grid-template-columns: 2fr 1fr 1fr 1fr;                                    
+     gap: 48px;                                                                 
+     margin-bottom: 56px;                                                       
+   }                                                                            
+                                                                                
+   .footer-logo {                                                               
+     font-weight: 700;                                                          
+     font-size: 20px;                                                           
+     color: #fff;                                                               
+     text-decoration: none;                                                     
+     display: flex;                                                             
+     align-items: center;                                                       
+     gap: 8px;                                                                  
+     margin-bottom: 16px;                                                       
+   }                                                                            
+                                                                                
+   .footer-brand p {                                                            
+     font-size: 14px;                                                           
+     line-height: 1.8;                                                          
+     max-width: 280px;                                                          
+     margin-bottom: 24px;                                                       
+   }                                                                            
+                                                                                
+   /* REVEAL ANIMATIONS */                                                      
+   .rv {                                                                        
+     opacity: 0;                                                                
+     transform: translateY(28px);                                               
+     transition: opacity 0.65s ease, transform 0.65s ease;                      
+   }                                                                            
+                                                                                
+   .rv.in {                                                                     
+     opacity: 1;                                                                
+     transform: translateY(0);                                                  
+   }                                                                            
+                                                                                
+   /* RESPONSIVE DESIGN */                                                      
+   @media (max-width: 1024px) {                                                 
+     .hero-top-row {                                                            
+       grid-template-columns: 1fr;                                              
+       gap: 24px;                                                               
+     }                                                                          
+                                                                                
+     .hero-photo {                                                              
+       height: 240px;                                                           
+     }                                                                          
+                                                                                
+     .about-section {                                                           
+       grid-template-columns: 1fr;                                              
+     }                                                                          
+                                                                                
+     .about-left {                                                              
+       border-right: none;                                                      
+       border-bottom: 1.5px solid var(--rule);                                  
+     }                                                                          
+                                                                                
+     .contact-section {                                                         
+       grid-template-columns: 1fr;                                              
+       gap: 48px;                                                               
+     }                                                                          
+   }                                                                            
+                                                                                
+   @media (max-width: 768px) {                                                  
+     nav {                                                                      
+       padding: 0 20px;                                                         
+     }                                                                          
+                                                                                
+     .nav-links {                                                               
+       display: none;                                                           
+     }                                                                          
+                                                                                
+     .hero-cards-row {                                                          
+       flex-wrap: wrap;                                                         
+       padding: 28px 20px 0;                                                    
+     }                                                                          
+                                                                                
+     .hcard {                                                                   
+       min-width: calc(50% - 7px);                                              
+     }                                                                          
+                                                                                
+     .hero-bottom {                                                             
+       flex-direction: column;                                                  
+       gap: 24px;                                                               
+       padding: 24px 20px 40px;                                                 
+     }                                                                          
+                                                                                
+     .hero-stats {                                                              
+       gap: 24px;                                                               
+     }                                                                          
+                                                                                
+     .uber-bar {                                                                
+       padding: 18px 20px;                                                      
+       flex-direction: column;                                                  
+       text-align: center;                                                      
+     }                                                                          
+                                                                                
+     .services-section {                                                        
+       padding: 48px 20px;                                                      
+     }                                                                          
+                                                                                
+     .about-left,                                                               
+     .about-right {                                                             
+       padding: 48px 20px;                                                      
+     }                                                                          
+                                                                                
+     .contact-section {                                                         
+       padding: 64px 20px;                                                      
+     }                                                                          
+                                                                                
+     .contact-right {                                                           
+       padding: 32px 24px;                                                      
+     }                                                                          
+                                                                                
+     footer {                                                                   
+       padding: 48px 20px 24px;                                                 
+     }                                                                          
+   }                                                                            
+                                                                                
+   /* ACCESSIBILITY */                                                          
+   .nav-links a:focus,                                                          
+   .btn-pill-dark:focus,                                                        
+   .btn-pill-outline:focus,                                                     
+   .cf-input:focus,                                                             
+   .cf-textarea:focus {                                                         
+     outline: 2px solid var(--green);                                           
+     outline-offset: 2px;                                                       
+   }                                                                            
+                                                                                
+   /* REDUCED MOTION SUPPORT */                                                 
+   @media (prefers-reduced-motion: reduce) {                                    
+     *,                                                                         
+     *::before,                                                                 
+     *::after {                                                                 
+       animation-duration: 0.01ms !important;                                   
+       animation-iteration-count: 1 !important;                                 
+       transition-duration: 0.01ms !important;                                  
+     }                                                                          
+                                                                                
+     .rv {                                                                      
+       opacity: 1;                                                              
+       transform: none;                                                         
+     }                                                                          
+                                                                                
+     #cur,                                                                      
+     #cur-ring {                                                                
+       display: none;                                                           
+     }                                                                          
+                                                                                
+     body {                                                                     
+       cursor: auto;                                                            
+     }                                                                          
+   }  
