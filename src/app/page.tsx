@@ -3,10 +3,10 @@
                                                                                 
    export const metadata: Metadata = {                                          
      title: 'Lettuce Print | Print Shop & Graphic Design — Brooklyn, NYC',      
-     description: 'Lettuce Print is a full-service print shop and graphic       
- design studio in Brooklyn, NY. Business cards, banners, flyers, stickers, roll 
+     description: 'Lettuce Print is a full-service print shop and graphic design  
+ studio in Brooklyn, NY. Business cards, banners, flyers, stickers, roll        
  labels, packaging, and logo design. Fast turnaround, price match guarantee,    
- and Uber delivery across all five NYC boroughs.',                              
+ and Uber delivery across all five NYC boroughs.',                                               
      keywords: 'print shop Brooklyn, printing services NYC, graphic design      
  Brooklyn, business cards NYC, banner printing Brooklyn',                       
    }                                                                            
