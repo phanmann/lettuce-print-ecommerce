@@ -1,5 +1,4 @@
-```tsx                                                                         
-   // app/page.tsx - New Lettuce Print Homepage                                 
+ // app/page.tsx - Complete Lettuce Print Homepage                            
    import type { Metadata } from 'next'                                         
                                                                                 
    export const metadata: Metadata = {                                          
@@ -258,6 +257,110 @@
            </div>                                                               
          </section>                                                             
                                                                                 
+         {/* Work Section - THIS WAS MISSING! */}                               
+         <section className="work-section" id="work">                           
+           <div className="work-header">                                        
+             <h2 className="work-head rv">Recent <em>NYC work.</em></h2>        
+             <a href="#contact" className="btn-pill-outline rv">See All Work    
+ →</a>                                                                          
+           </div>                                                               
+           <div className="work-strip">                                         
+             <div className="wcard c1"><div className="wcard-bg">🏷️</div><div   
+ className="wcard-tag">Roll Labels · Brooklyn</div><div                         
+ className="wcard-name">Claudine Farms</div></div>                              
+             <div className="wcard c2"><div className="wcard-bg">🎉</div><div   
+ className="wcard-tag">Event Flyers · NYC</div><div className="wcard-name">On   
+ The Revel</div></div>                                                          
+             <div className="wcard c3"><div className="wcard-bg">🖼️</div><div   
+ className="wcard-tag">Poster Design</div><div className="wcard-name">Dab       
+ Pals</div></div>                                                               
+             <div className="wcard c4"><div className="wcard-bg">🏳️</div><div   
+ className="wcard-tag">Vinyl Banners</div><div className="wcard-name">Event     
+ Wall Graphics</div></div>                                                      
+             <div className="wcard c5"><div className="wcard-bg">💼</div><div   
+ className="wcard-tag">Brand Identity</div><div className="wcard-name">Brooklyn 
+ Startup</div></div>                                                            
+             <div className="wcard c6"><div className="wcard-bg">📮</div><div   
+ className="wcard-tag">Postcards · Manhattan</div><div                          
+ className="wcard-name">Hospitali ty Brand</div></div>                          
+             <div className="wcard c7"><div className="wcard-bg">📦</div><div   
+ className="wcard-tag">Product Packaging</div><div className="wcard-name">CPG   
+ Brand NYC</div></div>                                                          
+             <div className="wcard c1"><div className="wcard-bg">🏷️</div><div   
+ className="wcard-tag">Roll Labels · Brooklyn</div><div                         
+ className="wcard-name">Claudine Farms</div></div>                              
+             <div className="wcard c2"><div className="wcard-bg">🎉</div><div   
+ className="wcard-tag">Event Flyers · NYC</div><div className="wcard-name">On   
+ The Revel</div></div>                                                          
+             <div className="wcard c3"><div className="wcard-bg">🖼️</div><div   
+ className="wcard-tag">Poster Design</div><div className="wcard-name">Dab       
+ Pals</div></div>                                                               
+             <div className="wcard c4"><div className="wcard-bg">🏳️</div><div   
+ className="wcard-tag">Vinyl Banners</div><div className="wcard-name">Event     
+ Wall Graphics</div></div>                                                      
+             <div className="wcard c5"><div className="wcard-bg">💼</div><div   
+ className="wcard-tag">Brand Identity</div><div className="wcard-name">Brooklyn 
+ Startup</div></div>                                                            
+             <div className="wcard c6"><div className="wcard-bg">📮</div><div   
+ className="wcard-tag">Postcards · Manhattan</div><div                          
+ className="wcard-name">Hospitali ty Brand</div></div>                          
+             <div className="wcard c7"><div className="wcard-bg">📦</div><div   
+ className="wcard-tag">Product Packaging</div><div className="wcard-name">CPG   
+ Brand NYC</div></div>                                                          
+           </div>                                                               
+         </section>                                                             
+                                                                                
+         {/* Testimonials Section - THIS WAS MISSING TOO! */}                   
+         <section className="testi-section">                                    
+           <div className="testi-label rv">What our NYC clients are             
+ saying</div>                                                                   
+           <div className="testi-scroll">                                       
+             <div className="tcard tc1">                                        
+               <div className="tcard-quote">"Lettuce Print nailed our product   
+ packaging. The roll labels came out exactly right for retail — clean,          
+ detailed, and on time. Best print shop in Brooklyn."</div>                     
+               <div className="tcard-person"><div                               
+ className="tcard-avatar">👩</div><div><div className="tcard-name">Maya         
+ C.</div><div className="tcard-role">Founder, Brooklyn CPG                      
+ Brand</div></div></div>                                                        
+             </div>                                                             
+             <div className="tcard tc2">                                        
+               <div className="tcard-quote">"Ordered event banners last minute  
+ and they delivered — literally, via Uber — same day. Quality was incredible.   
+ Lettuce Print is the real deal."</div>                                         
+               <div className="tcard-person"><div                               
+ className="tcard-avatar">🧑</div><div><div className="tcard-name">Marcus       
+ T.</div><div className="tcard-role">Event Producer, NYC</div></div></div>      
+             </div>                                                             
+             <div className="tcard tc3">                                        
+               <div className="tcard-quote">"Their graphic design team          
+ completely transformed our brand. New logo, new menus, new packaging. Parsons  
+ trained — and it absolutely shows in the work."</div>                          
+               <div className="tcard-person"><div                               
+ className="tcard-avatar">👩‍💼</div><div><div className="tcard-name">Jasmine      
+ R.</div><div className="tcard-role">Restauran t Owner,                         
+ Brooklyn</div></div></div>                                                     
+             </div>                                                             
+             <div className="tcard tc4">                                        
+               <div className="tcard-quote">"Walked in off the street with no   
+ appointment and left same day with beautiful flyers. Friendly team, fast       
+ service, and the quality is unmatched anywhere in NYC."</div>                  
+               <div className="tcard-person"><div                               
+ className="tcard-avatar">🧑‍🎤</div><div><div className="tcard-name">Devon        
+ A.</div><div className="tcard-role">Creative Director, NYC</div></div></div>   
+             </div>                                                             
+             <div className="tcard tc5">                                        
+               <div className="tcard-quote">"They matched our old printer's     
+ quote AND delivered better quality. No contest. Lettuce Print is our go-to for 
+ everything — printing, design, the works."</div>                               
+               <div className="tcard-person"><div                               
+ className="tcard-avatar">👨‍💻</div><div><div className="tcard-name">Alex         
+ K.</div><div className="tcard-role">Startup Founder,                           
+ Manhattan</div></div></div>                                                    
+             </div>                                                             
+           </div>                                                               
+         </section>                                                             
+                                                                                
          {/* Contact Section */}                                                
          <section className="contact-section" id="contact">                     
            <div className="contact-left rv">                                    
@@ -322,5 +425,4 @@
          </footer>                                                              
        </>                                                                      
      )                                                                          
-   }                                                                            
- ```         
+   }     
