@@ -359,7 +359,7 @@ export default function RollLabelsProductPage() {
               </div>
             </div>
           </section>
-        )}
+        }
 
         {/* Brooklyn Footer */}
         <footer className="bg-black text-[#888] py-18 px-10">
